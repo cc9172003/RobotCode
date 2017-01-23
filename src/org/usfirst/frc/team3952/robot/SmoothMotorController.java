@@ -3,6 +3,8 @@
  * and open the template in the editor.
  */
 package org.usfirst.frc.team3952.robot;
+
+import edu.wpi.first.wpilibj.Talon;
 //import java.lang.*;
 //import edu.wpi.first.wpilibj;
 
@@ -23,7 +25,7 @@ package org.usfirst.frc.team3952.robot;
 //	}
 //};
 
-public class SmoothMotorController extends edu.wpi.first.wpilibj.Talon implements Runnable
+public class SmoothMotorController extends Talon implements Runnable
 {
 	double	m_dDesiredPosition,
 			m_dCurrentPosition,
@@ -31,13 +33,14 @@ public class SmoothMotorController extends edu.wpi.first.wpilibj.Talon implement
 			m_dDampingAcceleration,
 			m_dVelocity,
 			m_dSpringCoefficient,
-			m_dDampingCoefficient;
+			m_dDampingCoefficient,
+			m_dPastValue;
 	boolean	m_bKeepRunning;
-	//Motor	m_objMotor;
 	Thread	m_objThread;
-	// ---
+
+
+	
 	SmoothMotorController(int nMotorIndex)
-	//SmoothMotorController()
 	{
 		super(nMotorIndex);
 		m_dDesiredPosition =
@@ -48,11 +51,11 @@ public class SmoothMotorController extends edu.wpi.first.wpilibj.Talon implement
 		m_dSpringCoefficient = 4.0 / 15.0;
 		m_dDampingCoefficient = 4.0 / 15.0;
 		m_bKeepRunning = true;
-		//m_objMotor = objMotor;
-		//m_objMotor = new Motor();	// Replace this with line preceding it and uncomment constructor line that takes motor (actual motor) object.
+		m_dPastValue = m_dCurrentPosition;
 		m_objThread = new Thread(this);
 		m_objThread.start();
 	}
+	@Override
 	public void finalize()
 	{
 		// The IDE recommended this finalize then complained when I added it.
@@ -64,43 +67,44 @@ public class SmoothMotorController extends edu.wpi.first.wpilibj.Talon implement
 	@Override
 	public synchronized void set(double dSpeed)
 	{
+		//one way of testing is super.set so it goes through talon. also comment other super set.
 		// TODO:  Verify that this is getting called by RobotDrive object.
 		m_dDesiredPosition = dSpeed;
 	}
+	
 	public void run()
 	{
-		int		nModulo = 0;
-		
 		while (m_bKeepRunning)
 		{
 			synchronized(this)
 			{
 				try
 				{
-					//Thread.sleep(50);
-					Thread.sleep(1);
+					Thread.sleep(50);
+					//Thread.sleep(1);
 				}
 				catch (InterruptedException e)
 				{
 				}
-				if (nModulo % 50 == 0)
+				
+				m_dSpringAcceleration = (m_dDesiredPosition - m_dCurrentPosition) * m_dSpringCoefficient;
+				m_dDampingAcceleration = -m_dVelocity * m_dDampingCoefficient;
+				m_dVelocity += m_dSpringAcceleration + m_dDampingAcceleration;
+				m_dCurrentPosition += m_dVelocity;
+				if (m_dCurrentPosition > 1.0)
 				{
-					m_dSpringAcceleration = (m_dDesiredPosition - m_dCurrentPosition) * m_dSpringCoefficient;
-					m_dDampingAcceleration = -m_dVelocity * m_dDampingCoefficient;
-					m_dVelocity += m_dSpringAcceleration + m_dDampingAcceleration;
-					m_dCurrentPosition += m_dVelocity;
-					if (m_dCurrentPosition > 1.0)
-					{
-						m_dCurrentPosition = 1.0;
-					}
-					else if (m_dCurrentPosition < -1.0)
-					{
-						m_dCurrentPosition = -1.0;
-					}
+					m_dCurrentPosition = 1.0;
 				}
-				nModulo++;
-				super.set(m_dCurrentPosition / 3.0);
-				//m_objMotor.SetSpeed(m_dCurrentPosition);
+				else if (m_dCurrentPosition < -1.0)
+				{
+					m_dCurrentPosition = -1.0;
+				}
+				double newValue = m_dCurrentPosition / 3.0;
+				if (m_dPastValue != newValue)
+				{
+					super.set(newValue);
+				}
+				m_dPastValue = newValue;
 			}
 		}
 	}

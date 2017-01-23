@@ -5,6 +5,7 @@
 package org.usfirst.frc.team3952.robot;
 
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Talon;
 
 /**
  *
@@ -15,17 +16,16 @@ import edu.wpi.first.wpilibj.RobotDrive;
 // servo-to-gyro-reference rotation capability.
 public class RobotDriver
 {
-	private RobotDrive rd
-					  ,rd2;
-	private edu.wpi.first.wpilibj.Talon					m_pobjLeftFrontWheel,
-									m_pobjRightFrontWheel,
-									m_pobjLeftRearWheel,
-									m_pobjRightRearWheel;
+	private RobotDrive	rd,
+						rd2;
+	private Talon		m_pobjLeftFrontWheel,
+						m_pobjRightFrontWheel,
+						m_pobjLeftRearWheel,
+						m_pobjRightRearWheel;
 //	private double					m_dLinearSpeed,		// In robot units... -5.0 to 5.0 I believe.
 //									m_dRotationalSpeed;	// Rotational speed... also in robot units.  Negative is anti-clockwise, positive is clockwise.
 	// ---
-	RobotDriver(edu.wpi.first.wpilibj.Talon pobjLeftFrontWheel, edu.wpi.first.wpilibj.Talon pobjRightFrontWheel,
-			edu.wpi.first.wpilibj.Talon pobjLeftRearWheel, edu.wpi.first.wpilibj.Talon pobjRightRearWheel)
+	RobotDriver(Talon pobjLeftFrontWheel, Talon pobjRightFrontWheel, Talon pobjLeftRearWheel, Talon pobjRightRearWheel)
 	{
 		m_pobjLeftFrontWheel = pobjLeftFrontWheel;
 		m_pobjRightFrontWheel = pobjRightFrontWheel;

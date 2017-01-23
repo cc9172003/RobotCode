@@ -8,10 +8,10 @@ public class DriveTrain
 	
 	Joystick j;
 	Joystick j2;
-	edu.wpi.first.wpilibj.Talon leftFrontDrive;
-	edu.wpi.first.wpilibj.Talon rightFrontDrive;
-	edu.wpi.first.wpilibj.Talon leftRearDrive;
-	edu.wpi.first.wpilibj.Talon rightRearDrive;
+	Talon leftFrontDrive;
+	Talon rightFrontDrive;
+	Talon leftRearDrive;
+	Talon rightRearDrive;
 	private RobotDrive rd;
 	private RobotDrive rd2;
 	private double power;

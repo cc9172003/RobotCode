@@ -28,6 +28,9 @@ public class Robot extends IterativeRobot {
 	ServoC sc;
 	WindshieldMotor m1;
 	long start;
+	
+	
+	
 	//double speed;
 	//we are using talon motors so need to make new DriveTrain class
 	
@@ -43,7 +46,6 @@ public class Robot extends IterativeRobot {
     //	lin =new LinearActuatorWinch(stick);
     	sc=new ServoC(stick, stick2,new Servo(6));
     	m1=new WindshieldMotor(4,5,stick,stick2);
-    	
     	//speed=-0.1;
     }
     
@@ -89,13 +91,4 @@ public class Robot extends IterativeRobot {
     }
     
     
-    /**
-     * 
-     *
-    
-    public void ultrasonicSample() {
-    	double range = ultra.getRangeInches(); // reads the range on the ultrasonic sensor
-    	System.out.println("u" +  range);
-    }
-    */
 }

@@ -1,4 +1,5 @@
 package org.usfirst.frc.team3952.robot;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
@@ -26,8 +27,10 @@ public class DriveTrain
 	
 	private static final double MAX_SPEED = 0.5;
 	private boolean pastInvertButton = false;
+	
+	private AnalogUltrasonic ultraRight;
+	private AnalogUltrasonic ultraLeft;
 
-	Ultrasonic ultra = new Ultrasonic(9,1);
 //	private boolean willStop;
 	
 	public DriveTrain(Joystick joyStick)//), Joystick joystick2)
@@ -41,12 +44,14 @@ public class DriveTrain
 		rightRearDrive = new Talon(3);
 		objRobotDriver = new RobotDriver(leftFrontDrive, rightFrontDrive, leftRearDrive, rightRearDrive);
 
-    	ultra.setAutomaticMode(true);
 		rd = new RobotDrive(leftFrontDrive, rightFrontDrive);
 		rd2 = new RobotDrive(leftRearDrive, rightRearDrive);
 		power  = 1.0;//0.7
 		turnRate = 1.1;//0.6
 		//0.5 is regular
+		
+		ultraRight = new AnalogUltrasonic(0);
+		ultraLeft = new AnalogUltrasonic(1);
 	}
 	
 	//below
@@ -59,7 +64,7 @@ public class DriveTrain
 	}
 	
 	public void drive(){
-		System.out.println(ultra.getRangeInches());
+		System.out.println(ultraRight.getDistance());
 		if(small(j.getX()) && small(j.getY())) return;//so it don't figit
 		objRobotDriver.SetFromController(MAX_SPEED*j.getX(), MAX_SPEED*j.getY(), 0.0, 0.0);
 			

@@ -51,7 +51,7 @@ public class DriveTrain
 		//0.5 is regular
 		
 		ultraRight = new AnalogUltrasonic(0);
-		ultraLeft = new AnalogUltrasonic(1);
+		//ultraLeft = new AnalogUltrasonic(1);
 	}
 	
 	//below
@@ -64,7 +64,7 @@ public class DriveTrain
 	}
 	
 	public void drive(){
-		System.out.println(ultraRight.getDistance());
+		//System.out.println(ultraRight.getDistance());
 		if(small(j.getX()) && small(j.getY())) return;//so it don't figit
 		objRobotDriver.SetFromController(MAX_SPEED*j.getX(), MAX_SPEED*j.getY(), 0.0, 0.0);
 			

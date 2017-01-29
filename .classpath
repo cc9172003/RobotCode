@@ -4,7 +4,9 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="var" path="networktables" sourcepath="networktables.sources"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/propa/Downloads/School/Frc Stuff/Team3952desTROYer-master/build/jars/NetworkTables.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/propa/Downloads/School/Frc Stuff/Team3952desTROYer-master/build/jars/WPILib.jar"/>
+	<classpathentry kind="lib" path="build/jars/NetworkTables.jar"/>
+	<classpathentry kind="lib" path="build/jars/WPILib.jar"/>
+	<classpathentry kind="var" path="opencv" sourcepath="opencv.sources"/>
+	<classpathentry kind="var" path="cscore" sourcepath="cscore.sources"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

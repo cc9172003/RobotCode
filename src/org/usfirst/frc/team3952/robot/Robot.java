@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.Ultrasonic;
+
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -30,7 +32,6 @@ public class Robot extends IterativeRobot {
 	long start;
 	
 	
-	
 	//double speed;
 	//we are using talon motors so need to make new DriveTrain class
 	
@@ -47,6 +48,7 @@ public class Robot extends IterativeRobot {
     	sc=new ServoC(stick, stick2,new Servo(6));
     	m1=new WindshieldMotor(4,5,stick,stick2);
     	//speed=-0.1;
+    
     }
     
     /**

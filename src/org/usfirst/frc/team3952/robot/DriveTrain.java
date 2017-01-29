@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.Encoder;
 
 public class DriveTrain
 {
@@ -30,8 +31,12 @@ public class DriveTrain
 	
 	private AnalogUltrasonic ultraRight;
 	private AnalogUltrasonic ultraLeft;
+	
+	private Encoder frontRightEncoder;
+	private Encoder frontLeftEncoder;
+	private Encoder rearRightEncoder;
+	private Encoder rearLeftEncoder;
 
-//	private boolean willStop;
 	
 	public DriveTrain(Joystick joyStick)//), Joystick joystick2)
 	{
@@ -52,6 +57,11 @@ public class DriveTrain
 		
 		ultraRight = new AnalogUltrasonic(0);
 		//ultraLeft = new AnalogUltrasonic(1);
+		frontRightEncoder = new Encoder(0,1); //front right
+		frontLeftEncoder = new Encoder(2, 3);
+		rearRightEncoder = new Encoder(4, 5);
+		rearLeftEncoder = new Encoder(6, 7);
+
 	}
 	
 	//below
@@ -64,9 +74,9 @@ public class DriveTrain
 	}
 	
 	public void drive(){
-		//System.out.println(ultraRight.getDistance());
+		System.out.println(rearLeftEncoder.get());
 		if(small(j.getX()) && small(j.getY())) return;//so it don't figit
-		objRobotDriver.SetFromController(MAX_SPEED*j.getX(), MAX_SPEED*j.getY(), 0.0, 0.0);
+		objRobotDriver.SetFromController(-MAX_SPEED*j.getX(), -MAX_SPEED*j.getY(), 0.0, 0.0);
 			
 		
 	}

@@ -37,8 +37,6 @@ public class SmoothMotorController extends Talon implements Runnable
 			m_dPastValue;
 	boolean	m_bKeepRunning;
 	Thread	m_objThread;
-
-
 	
 	SmoothMotorController(int nMotorIndex)
 	{
@@ -70,6 +68,7 @@ public class SmoothMotorController extends Talon implements Runnable
 		//one way of testing is super.set so it goes through talon. also comment other super set.
 		// TODO:  Verify that this is getting called by RobotDrive object.
 		m_dDesiredPosition = dSpeed;
+		super.set(m_dCurrentPosition);
 	}
 	
 	public void run()
@@ -81,7 +80,6 @@ public class SmoothMotorController extends Talon implements Runnable
 				try
 				{
 					Thread.sleep(50);
-					//Thread.sleep(1);
 				}
 				catch (InterruptedException e)
 				{
@@ -99,12 +97,12 @@ public class SmoothMotorController extends Talon implements Runnable
 				{
 					m_dCurrentPosition = -1.0;
 				}
-				double newValue = m_dCurrentPosition / 3.0;
-				if (m_dPastValue != newValue)
-				{
-					super.set(newValue);
-				}
-				m_dPastValue = newValue;
+//				double newValue = m_dCurrentPosition / 3.0;
+//				if (m_dPastValue != newValue)
+//				{
+//					super.set(newValue);
+//				}
+//				m_dPastValue = newValue;
 			}
 		}
 	}

@@ -45,7 +45,10 @@ public class RobotDriver
 				gy,
 				dDotProduct;
 
-		if (x != 0.0 || y != 0.0)
+		// MJP:  Note the hysteresis... gives a 75% dead-zone so direction changes are guaranteed deliberate.
+		// This assumes 1.0 is max value we are expecting from joystick.  If that turns out to be wrong,
+		// scale the 0.75 accordingly... i.e. 0.75 * actual-extremity.
+		if (x * x + y * y >= 0.75 * 0.75)
 		{
 			// Calculate normal to gyro angle.
 			dGyroAngle += java.lang.Math.PI / 2.0;

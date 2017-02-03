@@ -55,6 +55,29 @@ public class GripPipeline implements VisionPipeline{
 		ArrayList<MatOfPoint> convexHullsContours = findContoursOutput;
 		convexHulls(convexHullsContours, convexHullsOutput);
 
+		
+	}
+	
+	/**
+	 * This is the primary method that runs the entire pipeline and updates the outputs.
+	 */
+	public Mat processTMP(Mat source0) {
+		// Step HSL_Threshold0:
+		Mat hslThresholdInput = source0;
+		double[] hslThresholdHue = {77.6978417266187, 100.13651877133105};
+		double[] hslThresholdSaturation = {197.2122302158273, 255.0};
+		double[] hslThresholdLuminance = {29.81115107913669, 255.0};
+		hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, hslThresholdOutput);
+
+		// Step Find_Contours0:
+		Mat findContoursInput = hslThresholdOutput;
+		boolean findContoursExternalOnly = false;
+		findContours(findContoursInput, findContoursExternalOnly, findContoursOutput);
+
+		
+		return findContoursInput;
+
+		
 	}
 
 	/**

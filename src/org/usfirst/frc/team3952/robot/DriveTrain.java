@@ -43,12 +43,13 @@ public class DriveTrain
 		tflag=false;
 		j = joyStick;
 //		j2 = joystick2;
-		leftFrontDrive = new Talon(0);
-		rightFrontDrive = new Talon(1);
-		leftRearDrive = new Talon(2);
-		rightRearDrive = new Talon(3);
+		leftFrontDrive = new SmoothMotorController(0);
+		rightFrontDrive = new SmoothMotorController(1);
+		leftRearDrive = new SmoothMotorController(2);
+		rightRearDrive = new SmoothMotorController(3);
 		objRobotDriver = new RobotDriver(leftFrontDrive, rightFrontDrive, leftRearDrive, rightRearDrive);
 
+		
 		rd = new RobotDrive(leftFrontDrive, rightFrontDrive);
 		rd2 = new RobotDrive(leftRearDrive, rightRearDrive);
 		power  = 1.0;//0.7
@@ -61,7 +62,6 @@ public class DriveTrain
 		frontLeftEncoder = new Encoder(2, 3);
 		rearRightEncoder = new Encoder(4, 5);
 		rearLeftEncoder = new Encoder(6, 7);
-
 	}
 	
 	//below
@@ -69,16 +69,15 @@ public class DriveTrain
 {
 		while(System.currentTimeMillis()-start<1500)
 		{
-			objRobotDriver.SetFromController(.2,.4, 0.0, 0.0);
+			objRobotDriver.SetFromController(0.2, 0.4, 0.0, 0.0);
 		}
 	}
 	
-	public void drive(){
+	public void drive()
+	{
 		System.out.println(rearLeftEncoder.get());
 		if(small(j.getX()) && small(j.getY())) return;//so it don't figit
 		objRobotDriver.SetFromController(-MAX_SPEED*j.getX(), -MAX_SPEED*j.getY(), 0.0, 0.0);
-			
-		
 	}
 	public boolean small(double x)
 	{

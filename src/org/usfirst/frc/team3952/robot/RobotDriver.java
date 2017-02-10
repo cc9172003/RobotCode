@@ -5,6 +5,7 @@
 package org.usfirst.frc.team3952.robot;
 
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Talon;
 
 /**
@@ -22,6 +23,8 @@ public class RobotDriver
 						m_pobjRightFrontWheel,
 						m_pobjLeftRearWheel,
 						m_pobjRightRearWheel;
+	
+	
 //	private double					m_dLinearSpeed,		// In robot units... -5.0 to 5.0 I believe.
 //									m_dRotationalSpeed;	// Rotational speed... also in robot units.  Negative is anti-clockwise, positive is clockwise.
 	// ---
@@ -75,7 +78,7 @@ public class RobotDriver
 	}
 	void SetFromController(double leftx, double lefty, double rightx, double righty)//, double dGyroAngle)
 	{
-		double	dClockwise = 0.0, //dClockwise = ServoToGyroOffset(rightx, righty, dGyroAngle),
+		double	dClockwise = 0.0,//dClockwise = ServoToGyroOffset(rightx, righty, dGyroAngle),
 				dLeftFront = (lefty - leftx) + dClockwise,
 				dRightFront = (-lefty - leftx) - dClockwise,
 				dLeftRear = (lefty + leftx) + dClockwise,
@@ -85,6 +88,13 @@ public class RobotDriver
 		m_pobjRightFrontWheel.set(dRightFront);
 		m_pobjRightRearWheel.set(dRightRear);
 		m_pobjLeftRearWheel.set(dLeftRear);
+	}
+	
+	public void setMotorsDirectly(double fLeft, double fRight, double bLeft,double bRight){
+		m_pobjLeftFrontWheel.set(fLeft);
+		m_pobjRightFrontWheel.set(fRight);
+		m_pobjRightRearWheel.set(bRight);
+		m_pobjLeftRearWheel.set(bLeft);
 	}
 //	void SetLinearSpeed(double dSpeed)
 //	{

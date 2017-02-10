@@ -2,20 +2,13 @@ package org.usfirst.frc.team3952.robot;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
-import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.IterativeRobot; 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.Ultrasonic;
-
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.vision.VisionRunner;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 
@@ -37,29 +30,44 @@ import edu.wpi.cscore.CvSource;
 public class Robot extends IterativeRobot {
 	private static final int IMG_WIDTH = 640;
 	private static final int IMG_HEIGHT = 480;
-	DriveTrain dt;
-	DashBoard board;
-	Joystick stick;
-	Joystick stick2;
-	//LinearActuatorWinch lin;	
-	//ImageProcess i;
-	int autoLoopCounter;
 	
-	ServoC sc;
-	WindshieldMotor m1;
-	long start;
+	
+	private XboxController controller; 
+	
+	Talon leftFrontDrive;
+	Talon rightFrontDrive;
+	Talon leftRearDrive;
+	Talon rightRearDrive;
+	private RobotDrive rd;
+	private RobotDrive rd2;
+	private double power;
+	private double turnRate;
+	private boolean flag;
+	private RobotDriver objRobotDriver;
+	private boolean tflag;
+	private long time;
+	
+	private int minus;
+	
+	public static final double MAX_SPEED = 0.5;
+	private boolean pastInvertButton = false;
+	
+	private AnalogUltrasonic ultraRight;
+	private AnalogUltrasonic ultraLeft;
+	
+	private Encoder frontRightEncoder;
+	private Encoder frontLeftEncoder;
+	private Encoder rearRightEncoder;
+	private Encoder rearLeftEncoder;
+	
+	private Task currentTask;
+	private Queue<Task> anonymousTaskQueue = new LinkedList<Task>();
 	
 	
 	private VisionThread visionThread;
 	private double centerX = 0.0;
 	private final Object imgLock = new Object();
-	private NetworkTable table;
-	
-	
-	public Robot(){
-		//for some reason, the sample does this in the constructor. If it has issues, try changing to robotInit.
-		table = NetworkTable.getTable("GRIP/myContourReport");
-	}
+
 	
 	
     /**
@@ -67,15 +75,21 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-    	board = new DashBoard();
-    	stick = new Joystick(0);
-    //	stick2 = new Joystick(1);
-    	dt=new DriveTrain(stick);//,stick2);
-    //	lin =new LinearActuatorWinch(stick);
-    	sc=new ServoC(stick, stick2,new Servo(6));
-    	m1=new WindshieldMotor(4,5,stick,stick2);
-    	//speed=-0.1;
-    
+    	controller = new XboxController(0);
+    	
+    	currentTask = new DriveTask(controller);
+		leftFrontDrive = new SmoothMotorController(0);
+		rightFrontDrive = new SmoothMotorController(1);
+		leftRearDrive = new SmoothMotorController(2);
+		rightRearDrive = new SmoothMotorController(3);
+		objRobotDriver = new RobotDriver(leftFrontDrive, rightFrontDrive, leftRearDrive, rightRearDrive);
+
+		ultraRight = new AnalogUltrasonic(1);
+		ultraLeft = new AnalogUltrasonic(2);
+		frontRightEncoder = new Encoder(0,1); //front right
+		frontLeftEncoder = new Encoder(2, 3);
+		rearRightEncoder = new Encoder(4, 5);
+		rearLeftEncoder = new Encoder(6, 7);
   
     	UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
         camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
@@ -85,6 +99,7 @@ public class Robot extends IterativeRobot {
 		Mat src = new Mat();
 		Mat dst = new Mat();
 		
+		//ideal x = 280 pixels when 680 horizontal pixel resolution
         
         visionThread = new VisionThread(camera, new GripPipeline(), new VisionRunner.Listener<GripPipeline>(){
         	public void copyPipelineOutputs(GripPipeline pipeline){
@@ -140,14 +155,21 @@ public class Robot extends IterativeRobot {
      * This function is run once each time the robot enters autonomous mode
      */
     public void autonomousInit() {
-    	start=System.currentTimeMillis();
+    	
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-    	dt.autonD(start);
+    	Task frontOfQueue = anonymousTaskQueue.peek();
+		if(frontOfQueue != null)
+		{
+			boolean done = frontOfQueue.performTask(objRobotDriver);
+			if(done) {
+				anonymousTaskQueue.poll();
+			}
+		}
     	
     }
     
@@ -162,13 +184,17 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	dt.drive();
-    	board.updateDashboard();
-    	//lin.goLAW();
-    	
-    	sc.pCheck();
-    	//m1.pressCheck();
-    }
+    	boolean done = currentTask.performTask(objRobotDriver);
+		if(controller.getBButton()){
+			if(!(currentTask instanceof DriveTask)){
+				currentTask.cancel();
+				currentTask = new DriveTask(controller);
+			}
+		}else if(controller.getAButton()){
+			if(done) currentTask = new MoveToWallTask(ultraRight, ultraLeft, 32);
+		}
+	}
+	
     
     /**
      * This function is called periodically during test mode
@@ -178,4 +204,9 @@ public class Robot extends IterativeRobot {
     }
     
     
+    //==============================HELPER METHODS+==================================//
+    public boolean small(double x)
+	{
+		return Math.abs(x)<0.05;
+	}
 }

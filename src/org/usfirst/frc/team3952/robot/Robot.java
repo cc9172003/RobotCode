@@ -72,7 +72,7 @@ public class Robot extends IterativeRobot {
     	
     	
     	
-		leftFrontDrive = new SmoothMotorController(3);
+		leftFrontDrive = new SmoothMotorController(4);
 		rightFrontDrive = new SmoothMotorController(2);
 		leftRearDrive = new SmoothMotorController(1);
 		rightRearDrive = new SmoothMotorController(0);

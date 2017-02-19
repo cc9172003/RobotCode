@@ -1,6 +1,8 @@
 package org.usfirst.frc.team3952.robot;
 
 import java.io.IOException;
+
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -8,6 +10,7 @@ import java.util.Queue;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.vision.VisionRunner;
 import edu.wpi.first.wpilibj.vision.VisionThread;
@@ -26,6 +29,11 @@ import edu.wpi.cscore.CvSource;
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the manifest file in the resource
  * directory.
+ * 
+ * Task:
+ * 	TODAY: ball launcher PLS NEIL SERIOUSLY MAKER IT WORK>:>>>>>>
+ *  LONG TERM:
+ *  	CAMERA CODE TESTING> 
  */
 public class Robot extends IterativeRobot {
 	private static final int IMG_WIDTH = 640;
@@ -52,8 +60,10 @@ public class Robot extends IterativeRobot {
 	public static final double MAX_SPEED = 0.5;
 	private boolean pastInvertButton = false;
 	
-	private AnalogUltrasonic ultraRight;
+	private AnalogInput ultraRight;
 	private AnalogUltrasonic ultraLeft;
+	
+	private Ultrasonic dUltraRight, dUltraLeft;
 	
 	private Encoder frontRightEncoder;
 	private Encoder frontLeftEncoder;
@@ -61,6 +71,8 @@ public class Robot extends IterativeRobot {
 	private Encoder rearLeftEncoder;
 	
 	private Task currentTask;
+	private Task shooterTask; //exception to task workflow.
+	private Task climbTask;
 	private Queue<Task> anonymousTaskQueue = new LinkedList<Task>();
 	
 	
@@ -76,79 +88,24 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	controller = new XboxController(0);
+    	climbTask = new ClimbRopeTask(new Talon(7), controller);
     	
-    	currentTask = new DriveTask(controller);
-		leftFrontDrive = new SmoothMotorController(0);
-		rightFrontDrive = new SmoothMotorController(1);
-		leftRearDrive = new SmoothMotorController(2);
-		rightRearDrive = new SmoothMotorController(3);
-		objRobotDriver = new RobotDriver(leftFrontDrive, rightFrontDrive, leftRearDrive, rightRearDrive);
-
-		ultraRight = new AnalogUltrasonic(1);
-		ultraLeft = new AnalogUltrasonic(2);
-		frontRightEncoder = new Encoder(0,1); //front right
-		frontLeftEncoder = new Encoder(2, 3);
-		rearRightEncoder = new Encoder(4, 5);
-		rearLeftEncoder = new Encoder(6, 7);
-  
-    	UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-        camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
-
-		CvSink cvSink = CameraServer.getInstance().getVideo();
-		CvSource output = CameraServer.getInstance().putVideo("Blur", 640, 480);
-		Mat src = new Mat();
-		Mat dst = new Mat();
-		
-		//ideal x = 280 pixels when 680 horizontal pixel resolution
-        
-        visionThread = new VisionThread(camera, new GripPipeline(), new VisionRunner.Listener<GripPipeline>(){
-        	public void copyPipelineOutputs(GripPipeline pipeline){
-//	           
-        		if(pipeline.hslThresholdOutput() != null){
-            		
-            		
-
-        			//cvSink.grabFrame(src);
-            		//Imgproc.cvtColor(src, dst, Imgproc.COLOR_BGR2GRAY);
-        			output.putFrame(pipeline.hslThresholdOutput());
-            		
-        		}
-        		//if (!pipeline.convexHullsOutput().isEmpty()) {
-//	                double[] convexHullsAreas = new double[pipeline.convexHullsOutput().size()];
-//	                for(int i = 0; i < pipeline.convexHullsOutput().size(); i++){
-//	                	convexHullsAreas[i] = Imgproc.contourArea(pipeline.convexHullsOutput().get(i));
-//	                }
-//	                
-//	                for(double d: convexHullsAreas)
-//	                	System.out.println(d);
-//	               
-//	                
-//	                synchronized (imgLock) {
-//	                	
-//	                    System.out.println();
-//	                }
-	            //}
-        	}
-        });
-        
-        
-       visionThread.start();
-//        (new Thread(){
-//        	private GripPipeline pipe = new GripPipeline();
-//        	@Override
-//        	public void run(){
-//        		CvSink cvSink = CameraServer.getInstance().getVideo();
-//        		CvSource output = CameraServer.getInstance().putVideo("Blur", 640, 480);
-//        		
-//        		Mat source = new Mat();
-//        		
-//        		while(!Thread.interrupted()){
-//        			cvSink.grabFrame(source);
-//        			source = pipe.processTMP(source);
-//        			output.putFrame(source);
-//        		}
-//        	}
-//        }).start();
+//    	dUltraLeft = new Ultrasonic(1,2);
+//    	
+//    	currentTask = new DriveTask(controller);
+    	shooterTask = new BallLaunchTask(new Talon(9), new Talon(8), controller);
+//		leftFrontDrive = new SmoothMotorController(0);
+//		rightFrontDrive = new SmoothMotorController(1);
+//		leftRearDrive = new SmoothMotorController(2);
+//		rightRearDrive = new SmoothMotorController(3);
+//		objRobotDriver = new RobotDriver(leftFrontDrive, rightFrontDrive, leftRearDrive, rightRearDrive);
+//
+//		ultraRight = new AnalogInput(2);
+//		//ultraLeft = new AnalogUltrasonic(3, 100);
+//		frontRightEncoder = new Encoder(0,1); //front right
+//		frontLeftEncoder = new Encoder(2, 3);
+//		rearRightEncoder = new Encoder(4, 5);
+//		rearLeftEncoder = new Encoder(6, 7);
     }
     
     /**
@@ -184,15 +141,25 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	boolean done = currentTask.performTask(objRobotDriver);
-		if(controller.getBButton()){
-			if(!(currentTask instanceof DriveTask)){
-				currentTask.cancel();
-				currentTask = new DriveTask(controller);
-			}
-		}else if(controller.getAButton()){
-			if(done) currentTask = new MoveToWallTask(ultraRight, ultraLeft, 32);
-		}
+    	
+    	shooterTask.performTask(null); //SHOULD NOT MOVE THE ROBOT. THROWS NULL POINTER IF IT TRIES SO yay. 
+    	climbTask.performTask(null); //ALSO SHOULD NOT MOVE THE ROBOT
+    	
+    	System.out.println(controller.getPOV());
+    	
+//    	dUltraLeft.ping();
+//    	System.out.println(dUltraLeft.getRangeInches());
+//    	
+//    	boolean done = currentTask.performTask(objRobotDriver);
+//		if(controller.getBButton()){
+//			if(!(currentTask instanceof DriveTask)){
+//				currentTask.cancel();
+//				objRobotDriver.setMotorsDirectly(0, 0, 0, 0);
+//				currentTask = new DriveTask(controller);
+//			}
+//		}else if(controller.getAButton()){
+//		//	if(done) currentTask = new MoveToWallTask(ultraRight, ultraLeft, 32);
+//		}
 	}
 	
     

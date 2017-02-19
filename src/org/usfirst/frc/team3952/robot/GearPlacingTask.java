@@ -1,6 +1,11 @@
 package org.usfirst.frc.team3952.robot;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
+
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
@@ -12,13 +17,13 @@ import edu.wpi.first.wpilibj.vision.VisionThread;
 /**
  * use camera displacement idea.
  * 
- *  dHeading = k * sqrt(idealx -actualx); where k is a constant
+ *  dHeading = k * (idealx -actualx); where k is a constant
  *  
  *  Sqrt is employed since it prevents enormas dHeadings from occuring. Note, log might 
  *  be a good replacement if this dampening is not enough. Then we have:
  *  
- *  powerRight = oldpowerRight - dHeading;
- *  powerLeft = oldpowerLeft + dHeading
+ *  powerRight = constant - dHeading;
+ *  powerLeft = constant + dHeading
  * 
  * 
  * Plan:
@@ -37,12 +42,14 @@ public class GearPlacingTask implements Task {
 
 	private static final int IMG_WIDTH = 640;
 	private static final int IMG_HEIGHT = 480;
+	private static final int IDEAL_X = 280;
+	private static final double K = (1/640.0)/8.0;
 	
 	private VisionThread visionThread;
 	private double centerX = 0.0;
 	private final Object imgLock = new Object();
 	
-	private double deltaTheta = 0.1; //something thats not 0 so that 
+	private double dHeading = 0.1; //something thats not 0 so that 
 	
 	
 	public GearPlacingTask(){
@@ -61,19 +68,19 @@ public class GearPlacingTask implements Task {
 
         		//calculates deltatheta
         		if (!pipeline.convexHullsOutput().isEmpty()) {
-//	                double[] convexHullsAreas = new double[pipeline.convexHullsOutput().size()];
-//	                for(int i = 0; i < pipeline.convexHullsOutput().size(); i++){
-//	                	convexHullsAreas[i] = Imgproc.contourArea(pipeline.convexHullsOutput().get(i));
-//	                }
-//	                
-//	                for(double d: convexHullsAreas)
-//	                	System.out.println(d);
-//	               
-//	                
-//	                synchronized (imgLock) {
-//	                	
-//	                    System.out.println();
-//	                }
+
+        			double leftMost = IMG_WIDTH + 100;
+        			for(MatOfPoint mop: pipeline.convexHullsOutput()){
+        				Rect r = Imgproc.boundingRect(mop);
+        				if(r.x < leftMost) leftMost = r.x;
+        			}
+        			if(leftMost > IMG_WIDTH) return;
+        			
+        			synchronized(imgLock){
+        				dHeading = -K * (IDEAL_X - leftMost);
+        			}
+        			
+        			
 	            }
         	}
         });
@@ -84,7 +91,13 @@ public class GearPlacingTask implements Task {
 	
 	@Override
 	public boolean performTask(RobotDriver driver) {
-		// TODO Auto-generated method stub
+
+		synchronized(imgLock){
+			double pwrRight = Math.max(0.5*Robot.MAX_SPEED - dHeading, 0);
+			double pwrLeft = Math.max(0.5*Robot.MAX_SPEED + dHeading, Robot.MAX_SPEED);
+			driver.setMotorsDirectly(pwrLeft, pwrRight, pwrLeft, pwrRight);
+		}
+		
 		return false;
 	}
 

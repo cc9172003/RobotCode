@@ -36,34 +36,17 @@ import edu.wpi.cscore.CvSource;
  *  	CAMERA CODE TESTING> 
  */
 public class Robot extends IterativeRobot {
-	private static final int IMG_WIDTH = 640;
-	private static final int IMG_HEIGHT = 480;
-	
-	
 	private XboxController controller; 
 	
-	Talon leftFrontDrive;
-	Talon rightFrontDrive;
-	Talon leftRearDrive;
-	Talon rightRearDrive;
-	private RobotDrive rd;
-	private RobotDrive rd2;
-	private double power;
-	private double turnRate;
-	private boolean flag;
-	private RobotDriver objRobotDriver;
-	private boolean tflag;
-	private long time;
+	private Talon leftFrontDrive;
+	private Talon rightFrontDrive;
+	private Talon leftRearDrive;
+	private Talon rightRearDrive;
+
 	
-	private int minus;
+	private RobotDriver objRobotDriver;
 	
 	public static final double MAX_SPEED = 0.5;
-	private boolean pastInvertButton = false;
-	
-	private AnalogInput ultraRight;
-	private AnalogUltrasonic ultraLeft;
-	
-	private Ultrasonic dUltraRight, dUltraLeft;
 	
 	private Encoder frontRightEncoder;
 	private Encoder frontLeftEncoder;
@@ -74,11 +57,6 @@ public class Robot extends IterativeRobot {
 	private Task shooterTask; //exception to task workflow.
 	private Task climbTask;
 	private Queue<Task> anonymousTaskQueue = new LinkedList<Task>();
-	
-	
-	private VisionThread visionThread;
-	private double centerX = 0.0;
-	private final Object imgLock = new Object();
 
 	
 	
@@ -89,19 +67,19 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	controller = new XboxController(0);
     	climbTask = new ClimbRopeTask(new Talon(7), controller);
-    	
-//    	dUltraLeft = new Ultrasonic(1,2);
-//    	
-//    	currentTask = new DriveTask(controller);
+    	currentTask = new DriveTask(controller);
     	shooterTask = new BallLaunchTask(new Talon(9), new Talon(8), controller);
-//		leftFrontDrive = new SmoothMotorController(0);
-//		rightFrontDrive = new SmoothMotorController(1);
-//		leftRearDrive = new SmoothMotorController(2);
-//		rightRearDrive = new SmoothMotorController(3);
-//		objRobotDriver = new RobotDriver(leftFrontDrive, rightFrontDrive, leftRearDrive, rightRearDrive);
-//
-//		ultraRight = new AnalogInput(2);
-//		//ultraLeft = new AnalogUltrasonic(3, 100);
+    	
+    	
+    	
+		leftFrontDrive = new SmoothMotorController(3);
+		rightFrontDrive = new SmoothMotorController(2);
+		leftRearDrive = new SmoothMotorController(1);
+		rightRearDrive = new SmoothMotorController(0);
+		objRobotDriver = new RobotDriver(leftFrontDrive, rightFrontDrive, leftRearDrive, rightRearDrive);
+
+    	anonymousTaskQueue = new LinkedList<>();
+    	
 //		frontRightEncoder = new Encoder(0,1); //front right
 //		frontLeftEncoder = new Encoder(2, 3);
 //		rearRightEncoder = new Encoder(4, 5);
@@ -145,21 +123,15 @@ public class Robot extends IterativeRobot {
     	shooterTask.performTask(null); //SHOULD NOT MOVE THE ROBOT. THROWS NULL POINTER IF IT TRIES SO yay. 
     	climbTask.performTask(null); //ALSO SHOULD NOT MOVE THE ROBOT
     	
-    	System.out.println(controller.getPOV());
-    	
-//    	dUltraLeft.ping();
-//    	System.out.println(dUltraLeft.getRangeInches());
-//    	
-//    	boolean done = currentTask.performTask(objRobotDriver);
-//		if(controller.getBButton()){
-//			if(!(currentTask instanceof DriveTask)){
-//				currentTask.cancel();
-//				objRobotDriver.setMotorsDirectly(0, 0, 0, 0);
-//				currentTask = new DriveTask(controller);
-//			}
-//		}else if(controller.getAButton()){
-//		//	if(done) currentTask = new MoveToWallTask(ultraRight, ultraLeft, 32);
-//		}
+////    	
+    	boolean done = currentTask.performTask(objRobotDriver);
+		if(controller.getBButton()){
+			if(!(currentTask instanceof DriveTask)){
+				currentTask.cancel();
+				objRobotDriver.setMotorsDirectly(0, 0, 0, 0);
+				currentTask = new DriveTask(controller);
+			}
+		}
 	}
 	
     

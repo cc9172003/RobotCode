@@ -35,6 +35,8 @@ import edu.wpi.first.wpilibj.vision.VisionThread;
  * 
  * cancel cleans up the thread so no more intensive vision calculations are done and makes it so performTask() returns false. 
  * 
+ * BUT WE CAN"T DO IT SINCE WE DON"T HAVE LIGHTS ON THE CAMERA SKYEEEEEEEEEE.
+ * 
  * @author DUMBOOCTOPUS
  *
  */

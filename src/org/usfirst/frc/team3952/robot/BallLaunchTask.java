@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3952.robot;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -10,7 +11,7 @@ public class BallLaunchTask implements Task{
 	
 	private XboxController controller;
 	
-	private static final double LAUNCHER_SPEED = 0.5, GATE_MOTOR = 0.08;
+	private static final double LAUNCHER_SPEED = 1, GATE_MOTOR = 0.08;
 	private static final long WARM_UP_TIME = 500; //0.5second
 	private static final long COOL_DOWN_TIME = 3000; // 3 second
 
@@ -36,7 +37,7 @@ public class BallLaunchTask implements Task{
 		
 		//setting variables based on controller input.
 		//System.out.println(System.currentTimeMillis() + ": "+ timeWarmUpBegan);
-		if(!controller.getXButton()){
+		if(!controller.getBumper(Hand.kRight)){
 			coolingDown = true;
 			if(timeCoolDownBegan == 0)
 				timeCoolDownBegan = System.currentTimeMillis();

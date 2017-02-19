@@ -14,38 +14,13 @@ public class DriveTask implements Task{
 		this.controller = controller;
 	}
 	
-	private class HI implements PIDSource{
-
-		@Override
-		public void setPIDSourceType(PIDSourceType pidSource) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public PIDSourceType getPIDSourceType() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public double pidGet() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-		
-	}
 	
 	
 	@Override
 	public boolean performTask(RobotDriver driver) {
 		double y = controller.getY(Hand.kLeft);
-		double x = controller.getY(Hand.kRight);
+		double x = controller.getX(Hand.kLeft); //this used to be the Y of the right hand but i think that was wrong.
 
-		
-		if(controller.getPOV() == 0){
-			//PIDController pid = new 
-		}
 		
 		if(small(x) && small(y)) {
 			;

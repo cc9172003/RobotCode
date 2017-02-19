@@ -3,6 +3,12 @@ package org.usfirst.frc.team3952.robot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.XboxController;
 
+/**
+ * using both ultrasonics, it lines itself parallel to a wall. BUT SINCE SKYE DOESN"T HAVE THE ULTRA SONICS SET UP WE 
+ * CAN"T FRICKEN DO IT!!!! SKYYEEEEE
+ * @author Hemant
+ *
+ */
 public class MoveToWallTask implements Task {
 
 	private AnalogUltrasonic right;

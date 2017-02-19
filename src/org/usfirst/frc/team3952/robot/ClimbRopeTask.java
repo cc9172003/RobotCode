@@ -32,8 +32,7 @@ public class ClimbRopeTask implements Task{
 
 	@Override
 	public void cancel() {
-		// TODO Auto-generated method stub
-		
+		; //nothing happens yay.
 	}
 	
 }

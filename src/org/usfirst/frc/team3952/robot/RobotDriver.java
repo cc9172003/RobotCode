@@ -70,9 +70,9 @@ public class RobotDriver
 		}
 		return 0.0;
 	}
-	void SetFromController(double leftx, double lefty, double rightx, double righty)//, double dGyroAngle)
+	void SetFromController(double leftx, double lefty, double rightx, double righty, double dGyroAngle)
 	{
-		double	dClockwise = 0.0, //dClockwise = ServoToGyroOffset(rightx, righty, dGyroAngle),
+		double	dClockwise = ServoToGyroOffset(rightx, righty, dGyroAngle),
 				dLeftFront = (lefty - leftx) + dClockwise,
 				dRightFront = (-lefty - leftx) - dClockwise,
 				dLeftRear = (lefty + leftx) + dClockwise,
@@ -83,6 +83,7 @@ public class RobotDriver
 		m_pobjRightRearWheel.set(dRightRear);
 		m_pobjLeftRearWheel.set(dLeftRear);
 	}
+	
 //	void SetLinearSpeed(double dSpeed)
 //	{
 //		m_dLinearSpeed = dSpeed;

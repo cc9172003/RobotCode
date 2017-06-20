@@ -29,6 +29,9 @@ public class Robot extends IterativeRobot {
 	WindshieldMotor m1;
 	long start;
 	
+	Talon agitator;
+	Talon launcher;
+
 	
 	
 	//double speed;
@@ -44,9 +47,11 @@ public class Robot extends IterativeRobot {
     //	stick2 = new Joystick(1);
     	dt=new DriveTrain(stick);//,stick2);
     //	lin =new LinearActuatorWinch(stick);
-    	sc=new ServoC(stick, stick2,new Servo(6));
-    	m1=new WindshieldMotor(4,5,stick,stick2);
+    	//sc=new ServoC(stick, stick2,new Servo(6));
+    	//m1=new WindshieldMotor(4,5,stick,stick2);
     	//speed=-0.1;
+    	agitator = new Talon(7);
+    	launcher = new Talon(8);
     }
     
     /**
@@ -76,10 +81,16 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
     	dt.drive();
+    	if(stick.getTrigger()){
+    		launcher.set(1);
+    		agitator.set(0.2);
+    	} else{
+    		launcher.set(0);
+    		agitator.set(0);
+    	}
     	board.updateDashboard();
     	//lin.goLAW();
-    	
-    	sc.pCheck();
+  
     	//m1.pressCheck();
     }
     

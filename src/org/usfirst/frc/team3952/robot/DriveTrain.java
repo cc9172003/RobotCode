@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3952.robot;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
@@ -26,10 +27,6 @@ public class DriveTrain
 	private int minus;
 	
 	private static final double MAX_SPEED = 0.5;
-	private boolean pastInvertButton = false;
-	
-	private AnalogUltrasonic ultraRight;
-	private AnalogUltrasonic ultraLeft;
 
 //	private boolean willStop;
 	
@@ -38,10 +35,20 @@ public class DriveTrain
 		tflag=false;
 		j = joyStick;
 //		j2 = joystick2;
-		leftFrontDrive = new Talon(0);
-		rightFrontDrive = new Talon(1);
-		leftRearDrive = new Talon(2);
-		rightRearDrive = new Talon(3);
+		leftFrontDrive = new Talon(9);
+		rightFrontDrive = new Talon(4);
+		leftRearDrive = new Talon(1);
+		rightRearDrive = new Talon(0);
+		//0 = back right
+		//2 = nothing
+		//3 = climber
+		//4 = front right
+		//5 = nothing
+		//6 = nothing
+		//7 = agitator
+		//8 = launcher motor
+		//9 = left front
+		
 		objRobotDriver = new RobotDriver(leftFrontDrive, rightFrontDrive, leftRearDrive, rightRearDrive);
 
 		rd = new RobotDrive(leftFrontDrive, rightFrontDrive);
@@ -50,30 +57,35 @@ public class DriveTrain
 		turnRate = 1.1;//0.6
 		//0.5 is regular
 		
-		ultraRight = new AnalogUltrasonic(0);
-		//ultraLeft = new AnalogUltrasonic(1);
 	}
 	
 	//below
 	public void autonD(long start)
-{
-		while(System.currentTimeMillis()-start<1500)
-		{
-			objRobotDriver.SetFromController(.2,.4, 0.0, 0.0);
-		}
+	{
+//		while(System.currentTimeMillis()-start<1500)
+//		{
+//			objRobotDriver.SetFromController(.2,.4, 0.0, 0.0, 0);
+//		}
 	}
 	
 	public void drive(){
 		//System.out.println(ultraRight.getDistance());
-		if(small(j.getX()) && small(j.getY())) return;//so it don't figit
-		objRobotDriver.SetFromController(MAX_SPEED*j.getX(), MAX_SPEED*j.getY(), 0.0, 0.0);
-			
+		//if(small(j.getX()) && small(j.getY())) return;//so it don't figit
 		
+		double turn = 0;
+		if (j.getRawButton(5)) turn = 1;
+		else if (j.getRawButton(4)) turn = -1;
+		
+		objRobotDriver.SetFromController(-MAX_SPEED*clean(j.getX()), -MAX_SPEED*clean(j.getY()), 0.0, turn, 0);
 	}
-	public boolean small(double x)
-	{
-		return Math.abs(x)<0.05;
+	public double clean(double x){
+		if (Math.abs(x) < 0.05) return 0;
+		return x;
 	}
+//	public boolean small(double x)
+//	{
+//		return Math.abs(x)<0.05;
+//	}
 	public double getPower(){
 		return power;
 	}

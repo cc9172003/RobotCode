@@ -62,21 +62,18 @@ public class DriveTrain
 	//below
 	public void autonD(long start)
 	{
-//		while(System.currentTimeMillis()-start<1500)
-//		{
-//			objRobotDriver.SetFromController(.2,.4, 0.0, 0.0, 0);
-//		}
+		if(System.currentTimeMillis()-start<1500)
+		{
+			objRobotDriver.SetFromController(.2,.2, true, false);
+		}
 	}
 	
 	public void drive(){
 		//System.out.println(ultraRight.getDistance());
 		//if(small(j.getX()) && small(j.getY())) return;//so it don't figit
 		
-		double turn = 0;
-		if (j.getRawButton(5)) turn = 1;
-		else if (j.getRawButton(4)) turn = -1;
 		
-		objRobotDriver.SetFromController(-MAX_SPEED*clean(j.getX()), -MAX_SPEED*clean(j.getY()), 0.0, turn, 0);
+		objRobotDriver.SetFromController(-MAX_SPEED*clean(j.getX()), -MAX_SPEED*clean(j.getY()), j.getRawButton(5), j.getRawButton(4));
 	}
 	public double clean(double x){
 		if (Math.abs(x) < 0.05) return 0;

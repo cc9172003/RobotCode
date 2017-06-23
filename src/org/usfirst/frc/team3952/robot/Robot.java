@@ -83,11 +83,16 @@ public class Robot extends IterativeRobot {
     	dt.drive();
     	if(stick.getTrigger()){
     		launcher.set(1);
-    		agitator.set(0.2);
     	} else{
     		launcher.set(0);
+    	}
+    	if(stick.getRawButton(3) || stick.getRawButton(2)){
+    		if(stick.getRawButton(3)) agitator.set(-0.2);
+    		if(stick.getRawButton(2)) agitator.set(0.2);
+    	} else{
     		agitator.set(0);
     	}
+    	
     	board.updateDashboard();
     	//lin.goLAW();
   

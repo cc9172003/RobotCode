@@ -61,22 +61,32 @@ public class RobotDriver
 			// If dot product with normal to gyro angle is negative then anticlockwise else clockwise.
 			if (dDotProduct < 0.0)
 			{
-				return -0.2;
+				return -0.5;
 			}
 			else
 			{
-				return 0.2;
+				return 0.5;
 			}
 		}
 		return 0.0;
 	}
-	void SetFromController(double leftx, double lefty, double rightx, double righty, double dGyroAngle)
+	void SetFromController(double leftx, double lefty, boolean left, boolean right)
 	{
-		double	dClockwise = ServoToGyroOffset(rightx, righty, dGyroAngle),
-				dLeftFront = (lefty - leftx) + dClockwise,
-				dRightFront = (-lefty - leftx) - dClockwise,
-				dLeftRear = (lefty + leftx) + dClockwise,
-				dRightRear = (-lefty + leftx) - dClockwise;
+			double dLeftFront = (lefty - leftx),
+				dRightFront = (-lefty - leftx),
+				dLeftRear = (lefty + leftx) ,
+				dRightRear = (-lefty + leftx);
+		if(left){
+			dLeftFront += 0.2;
+			dLeftRear += 0.2;
+			dRightFront += 0.2;
+			dRightRear += 0.2;
+		} else if(right){
+			dLeftFront -=0.2;
+			dLeftRear -=0.2;
+			dRightFront -= 0.2;
+			dRightRear -= 0.2;
+		}
 		
 		m_pobjLeftFrontWheel.set(dLeftFront);
 		m_pobjRightFrontWheel.set(dRightFront);

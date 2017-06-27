@@ -11,7 +11,7 @@ set up instructions and not the C++ ones. [Instructions](https://wpilib.screenst
 		$ cd where/ever/you/want/to/put/teh/codez
 		$ git clone https://github.com/TroyFRC/RobotCode/tree/master
 		
-4. On the Driver station be sure to set the correct team number in the Set up tab on the left! Our team number is **3952** (not just a team but a family too :simple_smile:)
+4. On the Driver station be sure to set the correct team number in the Set up tab on the left! Our team number is **3952** (not just a team but a family too :smile:)
 5. Turn on Robot and connect to **3952** wifi. It usually takes about a minute to show up so don't worry if you don't see it immediately. If its not showing up, your router might need to be configured. 
 6. Click on the *Run* Menu Item, go into the *Run As* sub item and click *WPIlib Java Deploy*. 
 7. Go to Driver station and click enable. 
@@ -41,20 +41,24 @@ Most of these, you can just learn as you go. However, if you are not familiar wi
 1. Fork the repository. In order to do so, go to [the repo](https://github.com/TroyFRC/RobotCode/tree/master) and hit the fork button at the top 
 2. Clone the forked repo **NOT** the original
 
-	$ cd where\ever\you\want\to\put\teh\codez
-	$ git clone [url of your forked repo]
-If you do not understand `cd` **PLEASE** see the tutorials and make your life easier. 
+		$ git clone [url of your forked repo]
+	
+	If you do not understand `cd` **PLEASE** see the tutorials and make your life easier. 
 3. Make a new branch for your changes. This can be done many ways but heres my preference
 
-	$ git checkout -b name-of-your-awesome-branch  
+	$ git checkout -b name-of-your-awesome-branch
+	
 4. Open the project in eclipse and make any changes one wants. 
 5. Add, commit and push your changes. If you are familiar with git, you may place your changes in several commits and then push
 
+	```
 	$ git add -A
 	$ git commit -m "[descriptive message about your changes]"
-	$ git push origin name-of-your-awesome-branch
+	$ git push origin name-of-your-awesome-branch	
+	```
+	
 6. Go to your forked repository on github and file a pull request. If you are uncertain as to how to do that follow these [directions](https://help.github.com/articles/creating-a-pull-request-from-a-fork/)
-7. Wait for the code review :simple_smiley:. If the you need to change anything, just repeat steps 4 and 5.
+7. Wait for the code review :smile: . If the you need to change anything, just repeat steps 4 and 5.
 
 ## License
 

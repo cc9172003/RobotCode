@@ -22,40 +22,63 @@ This architecture may change in the future when more robust code is needed. Howe
 
 ## Contributing
 Basically anyone can contribute to this code base. 
-### Prerequistes:
+#### Prerequistes:
 0. Windows Computer
 1. Java.
-2. Git Basics
-3. Command Line basics
-4. Github Basics
-
-### Things to get/install
-1. [Eclipse](https://wpilib.screenstepslive.com/s/4485/m/13809/l/599681-installing-eclipse-c-java)
-2. Github account
-3. [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
-4. [WPI Suite](https://wpilib.screenstepslive.com/s/4485/m/13809/l/599671-installing-the-frc-2017-update-suite-all-languages)
+2. Knowledge of Git Basics
+3. Knowledge of Command Line basics
+4. Knowledge of Github Basics
+5. [Eclipse](https://wpilib.screenstepslive.com/s/4485/m/13809/l/599681-installing-eclipse-c-java)
+6. Github account
+7. [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+8. [WPI Suite](https://wpilib.screenstepslive.com/s/4485/m/13809/l/599671-installing-the-frc-2017-update-suite-all-languages)
 
 Most of these, you can just learn as you go. However, if you are not familiar with git or command line, please see tutorials. It'll make life easier. Here is an adorable one for [git](https://try.github.io/levels/1/challenges/1), heres an overkill one for [command line](https://www.codecademy.com/en/learn/learn-the-command-line).
 
-### Setting up
+#### Setting up for Troy FRC Team members
+1. Talk to the programming head and request them to add you as a contributor.
+2. Clone the original repo
+
+		$ cd where/you/want/it
+		$ git clone https://github.com/TroyFRC/RobotCode
+	
+	If you do not understand `cd` **PLEASE** see the tutorials and make your life easier. 
+3. Make a new branch for your changes. This can be done many ways but heres my preference
+
+		$ git checkout -b name-of-your-awesome-branch
+	
+4. Open the project in eclipse and make any changes one wants. Be sure to test them. 
+5. Add, commit and push your changes. If you are familiar with git, you may place your changes in several commits and then push
+
+	
+		$ git add -A
+		$ git commit -m "[descriptive message about your changes]"
+		$ git push origin name-of-your-awesome-branch	
+	
+	
+6. Go to the [repo](https://github.com/TroyFRC/RobotCode) and file a pull request to merge your branch with master. If you are uncertain as to how to do that follow these [directions](https://help.github.com/articles/creating-a-pull-request-from-a-fork/)
+7. Wait for the code review :smile: . If the you need to change anything, just repeat steps 4 and 5.
+
+#### Setting up for non Troy FRC peoples.
 1. Fork the repository. In order to do so, go to [the repo](https://github.com/TroyFRC/RobotCode/tree/master) and hit the fork button at the top 
 2. Clone the forked repo **NOT** the original
 
+		$ cd where/you/want/it
 		$ git clone [url of your forked repo]
 	
 	If you do not understand `cd` **PLEASE** see the tutorials and make your life easier. 
 3. Make a new branch for your changes. This can be done many ways but heres my preference
 
-	$ git checkout -b name-of-your-awesome-branch
+		$ git checkout -b name-of-your-awesome-branch
 	
 4. Open the project in eclipse and make any changes one wants. 
 5. Add, commit and push your changes. If you are familiar with git, you may place your changes in several commits and then push
 
-	```
-	$ git add -A
-	$ git commit -m "[descriptive message about your changes]"
-	$ git push origin name-of-your-awesome-branch	
-	```
+	
+		$ git add -A
+		$ git commit -m "[descriptive message about your changes]"
+		$ git push origin name-of-your-awesome-branch	
+	
 	
 6. Go to your forked repository on github and file a pull request. If you are uncertain as to how to do that follow these [directions](https://help.github.com/articles/creating-a-pull-request-from-a-fork/)
 7. Wait for the code review :smile: . If the you need to change anything, just repeat steps 4 and 5.

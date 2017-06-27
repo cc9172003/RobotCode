@@ -1,151 +1,106 @@
 package org.usfirst.frc.team3952.robot;
 
-import java.io.IOException;
-
-
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.vision.VisionRunner;
-import edu.wpi.first.wpilibj.vision.VisionThread;
-
-
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.imgproc.Imgproc;
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- * 
- * Task:
- * 	TODAY: ball launcher PLS NEIL SERIOUSLY MAKER IT WORK>:>>>>>>
- *  LONG TERM:
- *  	CAMERA CODE TESTING> 
+ * 0 = back right
+   2 = nothing
+	3 = climber
+		//4 = front right
+		//5 = nothing
+		//6 = nothing
+		//7 = agitator
+		//8 = launcher motor
+		//9 = left front
  */
 public class Robot extends IterativeRobot {
-	private XboxController controller; 
+	private Shooter shooter;
+	private MechanumWheels mechWheels;
 	
-	private Talon leftFrontDrive;
-	private Talon rightFrontDrive;
-	private Talon leftRearDrive;
-	private Talon rightRearDrive;
-
-	
-	private RobotDriver objRobotDriver;
-	
-	public static final double MAX_SPEED = 0.5;
-	
-	private Encoder frontRightEncoder;
-	private Encoder frontLeftEncoder;
-	private Encoder rearRightEncoder;
-	private Encoder rearLeftEncoder;
-	
-	private Task currentTask;
-	private Task shooterTask; //exception to task workflow.
-	private Task climbTask;
-	private Queue<Task> anonymousTaskQueue = new LinkedList<Task>();
-
+	private Joystick joy;
 	
 	
-    /**
-     * This function is run when the robot is first started up and should be;ioj;oi
-     * used for any initialization code.
-     */
-    public void robotInit() {
-    	controller = new XboxController(0);
-    	climbTask = new ClimbRopeTask(new Talon(7), controller);
-    	currentTask = new DriveTask(controller);
-    	shooterTask = new BallLaunchTask(new Talon(9), new Talon(8), controller);
-    	
-    	
-    	
-		leftFrontDrive = new SmoothMotorController(4);
-		rightFrontDrive = new SmoothMotorController(2);
-		leftRearDrive = new SmoothMotorController(1);
-		rightRearDrive = new SmoothMotorController(0);
-		objRobotDriver = new RobotDriver(leftFrontDrive, rightFrontDrive, leftRearDrive, rightRearDrive);
-
-    	anonymousTaskQueue = new LinkedList<>();
-    	
-//		frontRightEncoder = new Encoder(0,1); //front right
-//		frontLeftEncoder = new Encoder(2, 3);
-//		rearRightEncoder = new Encoder(4, 5);
-//		rearLeftEncoder = new Encoder(6, 7);
-    }
-    
-    /**
-     * This function is run once each time the robot enters autonomous mode
-     */
-    public void autonomousInit() {
-    	
-    }
-
-    /**
-     * This function is called periodically during autonomous
-     */
-    public void autonomousPeriodic() {
-    	Task frontOfQueue = anonymousTaskQueue.peek();
-		if(frontOfQueue != null)
-		{
-			boolean done = frontOfQueue.performTask(objRobotDriver);
-			if(done) {
-				anonymousTaskQueue.poll();
-			}
-		}
-    	
-    }
-    
-    /**
-     * This function is called once each time the robot enters tele-operated mode
-     */
-    public void teleopInit(){
-    	
-    }
-
-    /**
-     * This function is called periodically during operator control
-     */
-    public void teleopPeriodic() {
-    	
-    	shooterTask.performTask(null); //SHOULD NOT MOVE THE ROBOT. THROWS NULL POINTER IF IT TRIES SO yay. 
-    	climbTask.performTask(null); //ALSO SHOULD NOT MOVE THE ROBOT
-    	
-////    	
-    	boolean done = currentTask.performTask(objRobotDriver);
-		if(controller.getBButton()){
-			if(!(currentTask instanceof DriveTask)){
-				currentTask.cancel();
-				objRobotDriver.setMotorsDirectly(0, 0, 0, 0);
-				currentTask = new DriveTask(controller);
-			}
-		}
+	/**
+	 * This function is run when the robot is first started up and should be
+	 * used for any initialization code.
+	 */
+	@Override
+	public void robotInit() {
+		mechWheels = new MechanumWheels(
+				new Talon(9),
+				new Talon(4),
+				new Talon(1),
+				new Talon(0)
+		);
+		shooter = new Shooter(
+				new Talon(8),
+				new Talon(7)
+		);
+		joy = new Joystick(0);
+		
 	}
-	
-    
-    /**
-     * This function is called periodically during test mode
-     */
-    public void testPeriodic() {
-    	LiveWindow.run();
-    }
-    
-    
-    //==============================HELPER METHODS+==================================//
-    public boolean small(double x)
-	{
-		return Math.abs(x)<0.05;
+
+	/**
+	 * This autonomous (along with the chooser code above) shows how to select
+	 * between different autonomous modes using the dashboard. The sendable
+	 * chooser code works with the Java SmartDashboard. If you prefer the
+	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
+	 * getString line to get the auto name from the text box below the Gyro
+	 *
+	 * You can add additional auto modes by adding additional comparisons to the
+	 * switch structure below with additional strings. If using the
+	 * SendableChooser make sure to add them to the chooser code above as well.
+	 */
+	@Override
+	public void autonomousInit() {
+	}
+
+	/**
+	 * This function is called periodically during autonomous
+	 */
+	@Override
+	public void autonomousPeriodic() {
+	}
+
+	/**
+	 * This function is called periodically during operator control
+	 */
+	@Override
+	public void teleopPeriodic() {
+		
+		//driving
+		mechWheels.setFromController(
+				-MechanumWheels.MAX_SPEED * MechanumWheels.clean(joy.getX()), 
+				-MechanumWheels.MAX_SPEED * MechanumWheels.clean(joy.getY()), 
+				joy.getRawButton(5),
+				joy.getRawButton(4)
+		);
+		
+		//shooting
+		shooter.reset(); //sets them all to zero so they don't keep spinning.
+		
+		if(joy.getTrigger())
+    		shooter.shoot();
+    	
+		if(joy.getRawButton(3) && joy.getRawButton(2))
+			shooter.agitateRandom();
+		else if(joy.getRawButton(3)) 
+    		shooter.agitateBackwards();
+		else if(joy.getRawButton(2)) 
+    		shooter.agitateForwards();
+    	
+		
+	}
+	/**
+	 * This function is called periodically during test mode
+	 */
+	@Override
+	public void testPeriodic() {
+		
 	}
 }
+

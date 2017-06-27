@@ -7,7 +7,7 @@ public interface Task {
 	 * 
 	 * @return true if done, false if not done
 	 */
-	public boolean performTask(RobotDriver driver);
+	public boolean performTask(Robot robot);
 	
 	/**
 	 * forces task to stop

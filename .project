@@ -15,11 +15,4 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>edu.wpi.first.wpilib.plugins.core.nature.FRCProjectNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src/org/usfirst/frc/team3952/robot/RobotDriver.java</name>
-			<type>1</type>
-			<location>C:/Users/Hemant/Documents/RoboticsClub/RobotCode/src/org/usfirst/frc/team3952/robot/RobotDriver.java</location>
-		</link>
-	</linkedResources>
 </projectDescription>

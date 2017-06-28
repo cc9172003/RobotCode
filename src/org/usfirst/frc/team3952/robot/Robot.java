@@ -16,12 +16,32 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 		//7 = agitator
 		//8 = launcher motor
 		//9 = left front
+* 
+* Rules which will keep this code easy to read
+* 
+* 0. Put decision logic (when should we shoot, when should we agitate) in Controller, put motor and 
+* camera actions in Systems (MechanumWheels class, Shooter class) and keep the Robot class 
+* as slim as possible. The less code there is in Robot, the easier it is to read.
+* 1. Try to not pass controller in as an argument in method calls. That way,
+* all the controller decision making is inside Robot. Itll make it easier to
+* find out why certain things do what they do. If you pass in controller, you will have to
+* look into that method, find out what it does and repeat for all other method calls 
+* which accept controller as an argument. Note, this is just a part of Rule 0.
+* 2. Keep Joystick, XboxController and others inside Controller class. This makes it easy to switch
+* the actual controller without having to dig through a lot of code. If you want to switch controllers
+* all you gotta do is change Controller class.
+* 3. Prefix Controller boolean methods with should. For example
+* 	public boolean shouldShoot(){
+* 		//figures out whether it should shoot based on joy stick or xbox or something.
+*   }
+* 
+* 
  */
 public class Robot extends IterativeRobot {
 	private Shooter shooter;
 	private MechanumWheels mechWheels;
 	
-	private Joystick joy;
+	private Controller controller;
 	
 	
 	/**
@@ -40,7 +60,7 @@ public class Robot extends IterativeRobot {
 				new Talon(8),
 				new Talon(7)
 		);
-		joy = new Joystick(0);
+		controller = new Controller();
 		
 	}
 
@@ -71,26 +91,25 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		shooter.reset(); //sets them all to zero so they don't keep spinning.
 		
 		//driving
 		mechWheels.setFromController(
-				-MechanumWheels.MAX_SPEED * MechanumWheels.clean(joy.getX()), 
-				-MechanumWheels.MAX_SPEED * MechanumWheels.clean(joy.getY()), 
-				joy.getRawButton(5),
-				joy.getRawButton(4)
+				controller.horizontalMovement(), 
+				controller.lateralMovement(), 
+				controller.shouldTurnRight(),
+				controller.shouldTurnLeft()
 		);
 		
 		//shooting
-		shooter.reset(); //sets them all to zero so they don't keep spinning.
-		
-		if(joy.getTrigger())
+		if(controller.shouldShoot())
     		shooter.shoot();
     	
-		if(joy.getRawButton(3) && joy.getRawButton(2))
+		if(controller.shouldAgitateRandom())
 			shooter.agitateRandom();
-		else if(joy.getRawButton(3)) 
+		else if(controller.shouldAgitateBackwards())
     		shooter.agitateBackwards();
-		else if(joy.getRawButton(2)) 
+		else if(controller.shouldAgitateForwards())
     		shooter.agitateForwards();
     	
 		

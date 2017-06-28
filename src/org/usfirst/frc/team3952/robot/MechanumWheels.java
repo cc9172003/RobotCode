@@ -17,17 +17,18 @@ public class MechanumWheels {
 		m_pobjLeftRearWheel = pobjLeftRearWheel;
 		m_pobjRightRearWheel = pobjRightRearWheel;
 	}
-	// In 4 motor system where left controller x, y is to indicate fore/aft(y), lateral(x) and right controller indicates vector to servo to gyro angle.
-	// Left front = (y - x) + c			Right front = (y - x) - c
-	// Left rear  = (y + x) + c			Right rear  = (y + x) - c
-	// ---
-	// This function returns c for the above equations.  x and y are the right controller x, y, dGyroAngle is obtained from gyro and is in radians.
-	public void setFromController(double leftx, double lefty, boolean left, boolean right)
+
+	
+	public void setFromController(double horizontal, double lateral, boolean left, boolean right)
 	{
-		double dLeftFront = (lefty - leftx),
-				dRightFront = (-lefty - leftx),
-				dLeftRear = (lefty + leftx) ,
-				dRightRear = (-lefty + leftx);
+		//clean input
+		horizontal = -MAX_SPEED * clean(horizontal);
+		lateral = -MAX_SPEED * clean(lateral);
+		
+		double dLeftFront = (lateral - horizontal),
+				dRightFront = (-lateral - horizontal),
+				dLeftRear = (lateral + horizontal) ,
+				dRightRear = (-lateral + horizontal);
 		if(left){
 			dLeftFront += 0.2;
 			dLeftRear += 0.2;

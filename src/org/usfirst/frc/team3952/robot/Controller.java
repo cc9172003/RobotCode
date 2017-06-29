@@ -47,4 +47,12 @@ public class Controller {
 	public boolean shouldAgitateForwards(){
 		return j.getRawButton(2) && !j.getRawButton(3);
 	}
+
+	public boolean shouldStartLineUpToWall() {
+		return j.getRawButton(6);
+	}
+
+	public boolean cancelTask() {
+		return j.getRawButton(7);
+	}
 }

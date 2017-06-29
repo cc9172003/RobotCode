@@ -1,5 +1,4 @@
 package org.usfirst.frc.team3952.robot;
-import edu.wpi.first.wpilibj.XboxController;
 
 public interface Task {
 	
@@ -7,7 +6,7 @@ public interface Task {
 	 * 
 	 * @return true if done, false if not done
 	 */
-	public boolean performTask(Robot robot);
+	public boolean performTask();
 	
 	/**
 	 * forces task to stop

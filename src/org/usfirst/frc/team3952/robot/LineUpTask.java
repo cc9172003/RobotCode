@@ -29,4 +29,7 @@ public class LineUpTask implements Task {
 		mechWheels.setFromController(0, 0, false, false);
 	}
 
+	public String toString(){
+		return "Line Up Task";
+	}
 }

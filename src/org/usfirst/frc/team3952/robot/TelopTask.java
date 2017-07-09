@@ -38,4 +38,8 @@ public class TelopTask implements Task{
 	public void cancel(){
 		//do nothing.
 	}
+	
+	public String toString(){
+		return "Telop";
+	}
 }

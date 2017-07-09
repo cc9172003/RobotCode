@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3952.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
@@ -43,6 +45,7 @@ public class Robot extends IterativeRobot {
 	
 	private Controller controller;
 	private AnalogUltrasonic analogUltrasonic;
+	//private UsbCamera camera;
 	
 	private Task currentTask;
 	
@@ -65,7 +68,12 @@ public class Robot extends IterativeRobot {
 		controller = new Controller();
 		currentTask = new TelopTask(this);
 		analogUltrasonic = new AnalogUltrasonic(2);
+		
+		//camera = CameraServer.getInstance().startAutomaticCapture();
+		//camera.setResolution(640, 480);
+		
 	}
+	
 
 	@Override
 	public void autonomousInit() {
@@ -93,7 +101,13 @@ public class Robot extends IterativeRobot {
 		boolean done = currentTask.performTask();
 		if(done){
 			currentTask = new TelopTask(this);
-		}   
+		}  
+		
+		
+		//smart dashboard stuffs
+		SmartDashboard.putNumber("Ultrasonic Distance", Math.round(analogUltrasonic.getDistance()));
+		SmartDashboard.putString("Current Task", currentTask.toString());
+		
 	}
 	
 
@@ -122,6 +136,7 @@ public class Robot extends IterativeRobot {
 	public AnalogUltrasonic getAnalogUltrasonic(){
 		return analogUltrasonic;
 	}
+	
 	
 }
 

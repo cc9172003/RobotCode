@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3952.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 
 /**
  * This class serves as a layer between the actual controllers and the reading of
@@ -14,6 +15,7 @@ public class Controller {
 	
 	public Controller(){
 		this.j= new Joystick(0);
+
 	}
 	
 	public double horizontalMovement(){
@@ -51,8 +53,10 @@ public class Controller {
 	public boolean shouldStartLineUpToWall() {
 		return j.getRawButton(6);
 	}
+	
 
 	public boolean cancelTask() {
 		return j.getRawButton(7);
 	}
+	
 }

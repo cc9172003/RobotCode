@@ -13,4 +13,10 @@ public interface Task {
 	 */
 	public void cancel();
 	
+	/**
+	 * 
+	 * @return the name of the task
+	 */
+	public String toString();
+	
 }

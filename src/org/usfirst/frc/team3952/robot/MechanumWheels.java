@@ -51,7 +51,8 @@ public class MechanumWheels {
 	//UTIL
 	public static double clean(double x){
 		if (Math.abs(x) < 0.05) return 0;
-		if (Math.abs(x) >= 1) return 1.0;
+		if (x > 1) return 1;
+		if (x < -1) return -1;
 		return x;
 	}
 

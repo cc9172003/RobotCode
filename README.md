@@ -9,13 +9,18 @@ set up instructions and not the C++ ones. [Instructions](https://wpilib.screenst
 3. Install git command line tool. Follow the Windows installation directions [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 4. Clone code from [GitHub](https://github.com/TroyFRC/RobotCode/tree/master).
 
-		$ cd where/ever/you/want/to/put/teh/codez
+		$ cd where\ever\you\want\to\put\teh\codez
 		$ git clone https://github.com/TroyFRC/RobotCode/tree/master
-	Note: if you do not understand `cd` and `dir` commands. Please see this [command line cheat sheet](http://www.cs.princeton.edu/courses/archive/spr05/cos126/cmd-prompt.html)
+	Note: if you do not understand `cd` command, please see this [command line cheat sheet](http://www.cs.princeton.edu/courses/archive/spr05/cos126/cmd-prompt.html)
 4. Open FRC Driver Station. On the Driver station be sure to set the correct team number in the Set up tab on the left! Our team number is **3952** (not just a team but a family too :smile:)
 5. Turn on Robot and connect to **3952** wifi. It usually takes about a minute to show up so don't worry if you don't see it immediately. If its not showing up, your router might need to be configured. 
 6. If the Driver Station says "No Robot Code," click on the *Run* Menu Item, go into the *Run As* sub item and click *WPIlib Java Deploy*. 
 7. Go to Driver station and click enable. 
+8. If any the code on Github changes and you want the updates, you will have to open command prompt and run the following command
+
+		$ cd where\ever\you\putz\to\put\teh\codez
+		$ git pull
+		
 
 ## Architecture
 Our code revolves around subsystem classes and the robot class. The subsystem classes represent each part of the robot which is treated as a whole. For example, we have one subsystem class for the drive train and another for the shooter. These subsystem classes contain many methods which allows them to perform tasks. The Robot class initializes these subsystem classes in the `robotInit` method and uses them in the the Task classes. TODO: finish the rest of this.
@@ -39,7 +44,7 @@ Most of these, you can just learn as you go. However, if you are not familiar wi
 1. Talk to the programming head and request them to add you as a contributor.
 2. Clone the original repo
 
-		$ cd where/you/want/it
+		$ cd where\you\want\it
 		$ git clone https://github.com/TroyFRC/RobotCode
 	
 	If you do not understand `cd` **PLEASE** see the tutorials and make your life easier. 

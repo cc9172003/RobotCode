@@ -1,0 +1,30 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="Ultrasonic Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="57" y="126"/>
+		<property name="Editable" value="false"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="67" y="69"/>
+		<property name="Text" value="Connection Status"/>
+	</static-widget>
+	<widget field="Current Task" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="86" y="97"/>
+		<property name="Editable" value="false"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="317" y="27"/>
+		<width>275</width>
+		<height>220</height>
+		<property name="Camera Choice" value="USB Camera 0"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
+		<location x="168" y="66"/>
+		<width>21</width>
+		<height>20</height>
+	</static-widget>
+</dashboard>
+<live-window>
+</live-window>
+	<hidden field="Auto Selector"/>
+</xml>

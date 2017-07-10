@@ -7,7 +7,7 @@ public class MechanumWheels {
 	
 	private Talon m_pobjLeftFrontWheel, m_pobjRightFrontWheel, m_pobjLeftRearWheel, m_pobjRightRearWheel;
 	
-	public static final double MAX_SPEED = 0.5;
+	public static final double MAX_SPEED = 0.5, MAX_TURN = 0.3;
 	
 	
 	public MechanumWheels(Talon pobjLeftFrontWheel, Talon pobjRightFrontWheel, Talon pobjLeftRearWheel, Talon pobjRightRearWheel)
@@ -19,27 +19,23 @@ public class MechanumWheels {
 	}
 
 	
-	public void setFromController(double horizontal, double lateral, boolean left, boolean right)
+	public void setFromController(double horizontal, double lateral, double turnValue)
 	{
 		//clean input
 		horizontal = -MAX_SPEED * clean(horizontal);
 		lateral = -MAX_SPEED * clean(lateral);
+		turnValue = MAX_TURN * clean(turnValue);
 		
 		double dLeftFront = (lateral - horizontal),
 				dRightFront = (-lateral - horizontal),
 				dLeftRear = (lateral + horizontal) ,
 				dRightRear = (-lateral + horizontal);
-		if(left){
-			dLeftFront += 0.2;
-			dLeftRear += 0.2;
-			dRightFront += 0.2;
-			dRightRear += 0.2;
-		} else if(right){
-			dLeftFront -=0.2;
-			dLeftRear -=0.2;
-			dRightFront -= 0.2;
-			dRightRear -= 0.2;
-		}
+		
+		dLeftFront -= turnValue;
+		dLeftRear -= turnValue;
+		dRightFront -= turnValue;
+		dRightRear -= turnValue;
+		
 
 		m_pobjLeftFrontWheel.set(clean(dLeftFront));
 		m_pobjRightFrontWheel.set(clean(dRightFront));

@@ -19,8 +19,7 @@ public class TelopTask implements Task{
 		mechWheels.setFromController(
 				controller.horizontalMovement(), 
 				controller.lateralMovement(), 
-				controller.shouldTurnRight(),
-				controller.shouldTurnLeft()
+				controller.turnValue()
 		);
 		
 		//shooting

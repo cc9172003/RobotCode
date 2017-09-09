@@ -10,17 +10,19 @@ Unfortunately, the installation can only be done on windows computers.
 5. Go to Driver station and click enable. And Your Done! Be sure to plug in the joysticks or xbox controller.
 
 ## Getting new code.
-1. Follow the direction to install Eclipse. Be sure to follow the **Java**
-set up instructions and not the C++ ones. [Instructions](https://wpilib.screenstepslive.com/s/4485/m/13809/l/599681-installing-eclipse-c-java)
-2. Install git command line tool. Follow the Windows installation directions [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-3. Clone code from [GitHub](https://github.com/TroyFRC/RobotCode/tree/master).
+1. Follow the direction to install Eclipse. Be sure to follow the **Java** set up instructions and not the C++ ones. [Instructions](https://wpilib.screenstepslive.com/s/4485/m/13809/l/599681-installing-eclipse-c-java)
+2. Set up the [JAVA_HOME environment variable](https://javatutorial.net/set-java-home-windows-10)
+3. Install git command line tool. Follow the Windows installation directions [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+4. Clone code from [GitHub](https://github.com/TroyFRC/RobotCode/tree/master).
 
 		$ cd where\ever\you\want\to\put\teh\codez
 		$ git clone https://github.com/TroyFRC/RobotCode
 	Note: if you do not understand `cd` command, please see this [command line cheat sheet](http://www.cs.princeton.edu/courses/archive/spr05/cos126/cmd-prompt.html)
-4. Open Eclipse. Then click *File* and then *Open Projects from file system*. Open the Robot Code folder. 
-5. Click on the *Run* Menu Item, go into the *Run As* sub item and click *WPIlib Java Deploy*. 
-6. If any the code on Github changes and you want the updates, you will have to open command prompt and run the following commands
+5. Open Eclipse. Then click *File* and then *Open Projects from file system*. Open the Robot Code folder. 
+6. Click on *Windows* Menu Item, then *Preferences* and then click *WPILIB Preferences*. Set the team number to **3952**.
+7. Expand the side window to show the *Package Explorer*. Then click on *Team3952desTROYers* folder, then *src* then *org.usfirst.frc.team3952.robot*. Double click on Robot.java. 
+8. Click on the *Run* Menu Item, go into the *Run As* sub item and click *WPIlib Java Deploy*. 
+9. If any the code on Github changes and you want the updates, you will have to open command prompt and run the following commands
 
 		$ cd where\ever\you\putz\to\put\teh\codez
 		$ git pull

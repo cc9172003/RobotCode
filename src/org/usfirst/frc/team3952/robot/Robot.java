@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * 0 = back right
+ * 0 = Back right
    2 = nothing
 	3 = climber
 		//4 = front right
@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 		//7 = agitator
 		//8 = launcher motor
 		//9 = left front
-* 
+	//0 bottom right* 
 * Rules which will keep this code easy to read
 * 
 * 0. Put decision logic (when should we shoot, when should we agitate) in Controller, put motor and 
@@ -40,38 +40,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 * 
  */
 public class Robot extends IterativeRobot {
-	private Shooter shooter;
-	private MechanumWheels mechWheels;
 	
-	private Controller controller;
-	private AnalogUltrasonic analogUltrasonic;
-	//private UsbCamera camera;
-	
-	private Task currentTask;
-	
+	private Talon rightBack, rightFront, leftBack, leftFront;
+	private Joystick joystick;	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
-		mechWheels = new MechanumWheels(
-				new Talon(9),
-				new Talon(4),
-				new Talon(1),
-				new Talon(0)
-		);
-		shooter = new Shooter(
-				new Talon(8),
-				new Talon(7)
-		);
-		controller = new Controller();
-		currentTask = new TelopTask(this);
-		analogUltrasonic = new AnalogUltrasonic(2);
-		
-		//camera = CameraServer.getInstance().startAutomaticCapture();
-		//camera.setResolution(640, 480);
-		
+		rightBack = new Talon(0);
+		rightFront = new Talon(4);
+		leftFront = new Talon(9);
+		leftBack = new Talon(1);
+		joystick = new Joystick(0);
 	}
 	
 
@@ -84,30 +66,63 @@ public class Robot extends IterativeRobot {
 	}
 
 	
+	void setRF(double s) {
+		rightFront.set(s);
+	}
+	
+	void setRB(double s) {
+		rightBack.set(s);
+	}
+	
+	void setLF(double s) {
+		leftFront.set(-s);
+	}
+	
+	void setLB(double s) {
+		leftBack.set(-s);
+	}
+	
 	@Override
 	public void teleopPeriodic() {
-		if(controller.shouldStartLineUpToWall()){
-			currentTask.cancel();
-			currentTask = new LineUpTask(this);
-			
+		double yValue = (double)9 / 20 * (joystick.getZ() + (double) 11 / 9) * joystick.getY();
+		setRF(yValue);
+		setRB(yValue);
+		setLF(yValue);
+		setLB(yValue);
+		if(joystick.getRawButton(5)) {
+			//left
+			if(Math.abs(yValue) < 0.05) {
+				setRF(0.2);
+				setRB(0.2);
+				setLF(-0.2);
+				setLB(-0.2);
+			} else {
+				setRF(yValue + 0.2);
+				setRB(yValue + 0.2);
+				setLF(yValue);
+				setLB(yValue);
+			}
+		} else if(joystick.getRawButton(4)) {
+			//right
+			if(Math.abs(yValue) < 0.05) {
+				setRF(-0.2);
+				setRB(-0.2);
+				setLF(0.2);
+				setLB(0.2);
+			} else {
+				setRF(yValue);
+				setRB(yValue);
+				setLF(yValue + 0.2);
+				setLB(yValue + 0.2);
+			}
 		}
-
-		//should be last of controller checking.
-		if(controller.cancelTask()){
-			currentTask.cancel();
-			currentTask = new TelopTask(this);
-		} 
-
-		boolean done = currentTask.performTask();
-		if(done){
-			currentTask = new TelopTask(this);
-		}  
 		
-		
-		//smart dashboard stuffs
-		SmartDashboard.putNumber("Ultrasonic Distance", Math.round(analogUltrasonic.getDistance()));
-		SmartDashboard.putString("Current Task", currentTask.toString());
-		
+		/*if(joystick.getRawButton(5)) {	//shifting
+			rightBack.set(yValue);
+			rightFront.set(-yValue);
+			leftBack.set(-yValue);
+			leftFront.set(yValue);
+		}*/
 	}
 	
 
@@ -118,24 +133,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	
-	/**
-	 * Getters
-	 */
-	public Shooter getShooter() {
-		return shooter;
-	}
-
-	public MechanumWheels getMechWheels() {
-		return mechWheels;
-	}
-
-	public Controller getController() {
-		return controller;
-	}
 	
-	public AnalogUltrasonic getAnalogUltrasonic(){
-		return analogUltrasonic;
-	}
 	
 	
 }

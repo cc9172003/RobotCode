@@ -82,47 +82,57 @@ public class Robot extends IterativeRobot {
 		leftBack.set(-s);
 	}
 	
+	double calculate_the_speed_we_will_set_for_the_mechanum_wheels_using_the_formula_we_figured_out_on_december_fourth_2017_which_is_nine_divided_by_twenty_times_the_sum_of_the_z_value_of_the_joystick_plus_the_quotient_of_eleven_and_nine_times_the_y_value_of_the_joystick() {
+		return (double)9 / 20 * (joystick.getZ() + (double) 11 / 9) * joystick.getY();
+	}
+	
+	double constraint(double n) {
+		return Math.min(1.0, Math.max(-1.0,  n));
+	}
+	
+	void setMotors(double rf, double rb, double lf, double lb) {
+		setRF(constraint(rf));
+		setRB(constraint(rb));
+		setLF(constraint(lf));
+		setLB(constraint(lb));
+	}
+	
+	boolean isSmall(double value) {
+		return Math.abs(value) < 0.05;
+	}
+	
+	boolean turn(int button) {
+		return joystick.getRawButton(button);
+	}
+	
+	static final int LEFT = 5, RIGHT = 4;
+	static final double TURNING_SPEED = 0.3;
+	
 	@Override
 	public void teleopPeriodic() {
-		double yValue = (double)9 / 20 * (joystick.getZ() + (double) 11 / 9) * joystick.getY();
-		setRF(yValue);
-		setRB(yValue);
-		setLF(yValue);
-		setLB(yValue);
-		if(joystick.getRawButton(5)) {
+		
+		double speed = calculate_the_speed_we_will_set_for_the_mechanum_wheels_using_the_formula_we_figured_out_on_december_fourth_2017_which_is_nine_divided_by_twenty_times_the_sum_of_the_z_value_of_the_joystick_plus_the_quotient_of_eleven_and_nine_times_the_y_value_of_the_joystick();
+		
+		setMotors(speed, speed, speed, speed);
+		
+		//Deprecated
+		if(turn(LEFT)) {
 			//left
-			if(Math.abs(yValue) < 0.05) {
-				setRF(0.2);
-				setRB(0.2);
-				setLF(-0.2);
-				setLB(-0.2);
-			} else {
-				setRF(yValue + 0.2);
-				setRB(yValue + 0.2);
-				setLF(yValue);
-				setLB(yValue);
-			}
-		} else if(joystick.getRawButton(4)) {
+			if(isSmall(speed))
+				setMotors(TURNING_SPEED, TURNING_SPEED, -TURNING_SPEED, -TURNING_SPEED);
+			else
+				setMotors(speed + TURNING_SPEED, speed + TURNING_SPEED, speed, speed);
+		} else if(turn(RIGHT)) {
 			//right
-			if(Math.abs(yValue) < 0.05) {
-				setRF(-0.2);
-				setRB(-0.2);
-				setLF(0.2);
-				setLB(0.2);
-			} else {
-				setRF(yValue);
-				setRB(yValue);
-				setLF(yValue + 0.2);
-				setLB(yValue + 0.2);
-			}
+			if(isSmall(speed))
+				setMotors(-TURNING_SPEED, -TURNING_SPEED, TURNING_SPEED, TURNING_SPEED);
+			else
+				setMotors(speed, speed, speed + TURNING_SPEED, speed + TURNING_SPEED);
 		}
 		
-		/*if(joystick.getRawButton(5)) {	//shifting
-			rightBack.set(yValue);
-			rightFront.set(-yValue);
-			leftBack.set(-yValue);
-			leftFront.set(yValue);
-		}*/
+		//if(!isSmall(joystick.getX())) {
+			
+		//}
 	}
 	
 

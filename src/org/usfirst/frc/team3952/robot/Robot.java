@@ -112,10 +112,11 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		
 		double speed = calculate_the_speed_we_will_set_for_the_mechanum_wheels_using_the_formula_we_figured_out_on_december_fourth_2017_which_is_nine_divided_by_twenty_times_the_sum_of_the_z_value_of_the_joystick_plus_the_quotient_of_eleven_and_nine_times_the_y_value_of_the_joystick();
+		SmartDashboard.putNumber("Speed", speed);
 		
 		setMotors(speed, speed, speed, speed);
 		
-		//Deprecated
+		//Not Deprecated
 		if(turn(LEFT)) {
 			//left
 			if(isSmall(speed))

@@ -54,12 +54,14 @@ public class Robot extends IterativeRobot {
 		leftFront = new Talon(9);
 		leftBack = new Talon(1);
 		joystick = new Joystick(0);
+		SmartDashboard.putNumber("Speed", 0);
 	}
 	
 
 	@Override
 	public void autonomousInit() {
-	}
+		SmartDashboard.putNumber("Speed", 0);
+		}
 
 	@Override
 	public void autonomousPeriodic() {
@@ -105,8 +107,9 @@ public class Robot extends IterativeRobot {
 		return joystick.getRawButton(button);
 	}
 	
-	static final int LEFT = 5, RIGHT = 4;
+	static int LEFT = 5, RIGHT = 4;
 	static final double TURNING_SPEED = 0.3;
+	static boolean pressed = false;
 	
 	@Override
 	public void teleopPeriodic() {
@@ -115,6 +118,15 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Speed", speed);
 		
 		setMotors(speed, speed, speed, speed);
+		
+		if(!joystick.getRawButton(3)) {
+			pressed = false;
+		} else if(!pressed && joystick.getRawButton(3)) {
+			int buf = LEFT;
+			LEFT = RIGHT;
+			RIGHT = buf;
+			pressed = true;
+		}
 		
 		//Not Deprecated
 		if(turn(LEFT)) {

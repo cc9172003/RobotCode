@@ -42,6 +42,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	
 	private Talon rightBack, rightFront, leftBack, leftFront;
+	private Talon agitate;
 	private Joystick joystick;	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -54,6 +55,7 @@ public class Robot extends IterativeRobot {
 		leftFront = new Talon(9);
 		leftBack = new Talon(1);
 		joystick = new Joystick(0);
+		agitate = new Talon(7);
 		SmartDashboard.putNumber("Speed", 0);
 	}
 	
@@ -121,6 +123,12 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Speed", speed);
 		
 		setMotors(speed, speed, speed, speed);
+		
+		if(joystick.getRawButton(3)) 
+			agitate.set(0.5);
+		else 
+			agitate.set(0);
+		
 		
 		if(!joystick.getRawButton(3)) {
 			pressed = false;

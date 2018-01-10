@@ -2,6 +2,7 @@ package org.usfirst.frc.team3952.robot;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
@@ -42,8 +43,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	
 	private Talon rightBack, rightFront, leftBack, leftFront;
-	private Talon agitate;
 	private Joystick joystick;	
+	
+	private String sideConfiguration;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -55,15 +58,16 @@ public class Robot extends IterativeRobot {
 		leftFront = new Talon(9);
 		leftBack = new Talon(1);
 		joystick = new Joystick(0);
-		agitate = new Talon(7);
+		
 		SmartDashboard.putNumber("Speed", 0);
 	}
 	
 
 	@Override
 	public void autonomousInit() {
+		//sideConfiguration = DriverStation.getInstance().getGameSpecificMessage();
 		SmartDashboard.putNumber("Speed", 0);
-		}
+	}
 
 	@Override
 	public void autonomousPeriodic() {
@@ -123,11 +127,6 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Speed", speed);
 		
 		setMotors(speed, speed, speed, speed);
-		
-		if(joystick.getRawButton(3)) 
-			agitate.set(0.5);
-		else 
-			agitate.set(0);
 		
 		
 		if(!joystick.getRawButton(3)) {

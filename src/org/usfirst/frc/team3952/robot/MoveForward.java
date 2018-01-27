@@ -4,25 +4,24 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.*;
 
 public class MoveForward extends Task {
-	MecanumDrive drive;
-	Encoder leftEncoder, rightEncoder;
-	double totalDistance, remainingDistance;
+	private MecanumDrive drive;
+	private Encoder leftEncoder, rightEncoder;
+	private double totalDistance;
 	
 	public MoveForward(Robot robot, double distance) {
 		drive = robot.getDrive();
-		leftEncoder = robot.getEncoder(Robot.LEFT);
-		rightEncoder = robot.getEncoder(Robot.RIGHT);
+		leftEncoder = robot.getLeftEncoder();
+		rightEncoder = robot.getRightEncoder();
 		totalDistance = distance;
-		remainingDistance = distance;
 	}
 	
 	@Override
 	public boolean run() {
-		if(remainingDistance < 0) {
+		double currentDistance = (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2;
+		if(currentDistance >= totalDistance - 0.1) {
 			return true;
 		} else {
-			drive.driveCartesian(1, 0, 0);		// set to a reasonable value
-			remainingDistance -= (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2;		// get average of two encoders for accuracy
+			drive.driveCartesian(0.3, 0, 0);		// set to a reasonable value
 			return false;
 		}
 	}
@@ -34,6 +33,7 @@ public class MoveForward extends Task {
 	
 	@Override
 	public String toString() {
-		return "Move Forward " + (int)totalDistance + " feet(" + (int)remainingDistance + " feet left)";
+		double currentDistance = (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2;
+		return "Move Forward: " + (int)totalDistance + " feet(" + (int) (currentDistance - totalDistance) + " feet left)";
 	}
 }

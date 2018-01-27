@@ -21,37 +21,48 @@ public class Robot extends IterativeRobot {
 								 new Talon(0), 			// rear left
 								 new Talon(0), 			// front right
 								 new Talon(0));			// rear right
-		currentTask = null;
-		backgroundTask = null;
+		currentTask = new TeleopTask(this);
+		backgroundTask = new NullTask();
 		rightEncoder = new Encoder(0, 1);
 		leftEncoder = new Encoder(2, 3);
 		gyro = new ADXRS450_Gyro();
+		//gyro.calibrate();
+		
 	}
 	
 	@Override
 	public void teleopInit() {
-		currentTask = new Teleop(this);
+		currentTask = new TeleopTask(this);
 		backgroundTask = null;
 	}
 	
 	@Override
 	public void teleopPeriodic() {
-		if(currentTask == null) {
-			currentTask = new Teleop(this);
-		}
+		
+		
 		if(controller.cancelTask()) {
 			currentTask.cancel();
-			currentTask = new Teleop(this);
+			currentTask = new TeleopTask(this);
 		}
-		currentTask.run();
-		
 		if(controller.cancelBackgroundTask()) {
 			backgroundTask.cancel();
-			backgroundTask = null;
+			//NOTE: Null Task never return true!!!
+			backgroundTask = new NullTask();
 		}
-		if(backgroundTask != null) {
-			backgroundTask.run();
+		
+		
+		boolean done = currentTask.run();
+		if(done){
+			currentTask = new TeleopTask(this);
 		}
+		
+		
+		/**IMPORTANT NOTE: Null task.run never returns true.**/
+		boolean backDone = backgroundTask.run();
+		if(backDone){
+			backgroundTask = new NullTask();
+		}
+		
 		
 		SmartDashboard.putString("Current Task", currentTask.toString());
 	}

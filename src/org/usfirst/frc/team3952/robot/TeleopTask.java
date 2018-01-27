@@ -2,11 +2,11 @@ package org.usfirst.frc.team3952.robot;
 
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
-public class Teleop extends Task {
+public class TeleopTask extends Task {
 	private Controller controller;
 	private MecanumDrive drive;
 	
-	public Teleop(Robot robot) {
+	public TeleopTask(Robot robot) {
 		controller = robot.getController();
 		drive = robot.getDrive();
 	}

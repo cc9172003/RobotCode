@@ -3,12 +3,12 @@ package org.usfirst.frc.team3952.robot;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.*;
 
-public class MoveForward extends Task {
+public class MoveForwardTask extends Task {
 	private MecanumDrive drive;
 	private Encoder leftEncoder, rightEncoder;
 	private double totalDistance;
 	
-	public MoveForward(Robot robot, double distance) {
+	public MoveForwardTask(Robot robot, double distance) {
 		drive = robot.getDrive();
 		leftEncoder = robot.getLeftEncoder();
 		rightEncoder = robot.getRightEncoder();

@@ -1,6 +1,6 @@
 package org.usfirst.frc.team3952.robot;
 
-public class RetractLadderFully extends Task {
+public class RetractLadderFullyTask extends Task {
 	@Override
 	public boolean run(){
 		//TODOOOO

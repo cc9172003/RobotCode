@@ -1,16 +1,19 @@
 package org.usfirst.frc.team3952.robot;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AnalogUltrasonic {
-	private AnalogInput sensor;
-	private CircularQueue cq;
+	private AnalogInput sensor; //the actual sensor
+	private CircularQueue cq; //stores past 10 values.
 	//units cm/what ever sensor gives
 	private static final double EMF_TO_CM = 107.14; //Determined Experimentally CHANGE IF HAS ISSUES
 	
 	
 	public AnalogUltrasonic(int pin){
 		sensor = new AnalogInput(pin);
-		new UpdateSensorDataThread().start();	
+		cq = new CircularQueue(10);
+		Thread t = new UpdateSensorDataThread();
+		t.start();
 	}
 	
 	
@@ -22,11 +25,13 @@ public class AnalogUltrasonic {
 		
 		@Override
 		public void run(){
-			try{
-				cq.add(sensor.getVoltage()* EMF_TO_CM);
-				Thread.sleep(100); //update every .1 seconds
-			} catch(InterruptedException e){
-				System.out.println("Update Ultrasonic Sensor Thread died");
+			while(true){
+				try{
+					cq.add(sensor.getVoltage());
+					Thread.sleep(10); //update every .1 seconds
+				} catch(InterruptedException e){
+					System.out.println("Update Ultrasonic Sensor Thread died");
+				}
 			}
 			
 		}
@@ -45,9 +50,8 @@ public class AnalogUltrasonic {
 		public synchronized void add(double value){
 			
 			values[index] = value;
-			
-			index = (index + 1);
-			if(index > values.length){
+			index++;
+			if(index >= values.length){
 				filled = true;
 				index %= values.length;
 			}
@@ -55,12 +59,21 @@ public class AnalogUltrasonic {
 		
 		public synchronized double average(){
 			double av = 0.0;
-			int max = (filled? values.length:index+1);
+			int max = (filled? values.length:index);
 			
 			for(int i = 0; i < max; i++){
 				av += values[i];
 			}
 			return av/max;
 		}
+		
+		public synchronized String toString(){
+			String out = "";
+			for(double elem: values){
+				out += elem + " ";
+			}
+			return out;
+		}
+
 	}	
 }

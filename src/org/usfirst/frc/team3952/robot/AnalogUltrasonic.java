@@ -6,7 +6,7 @@ public class AnalogUltrasonic {
 	private AnalogInput sensor; //the actual sensor
 	private CircularQueue cq; //stores past 10 values.
 	//units cm/what ever sensor gives
-	private static final double EMF_TO_CM = 107.14; //Determined Experimentally CHANGE IF HAS ISSUES
+	private static final double EMF_TO_CM = 3.5; //Determined Experimentally CHANGE IF HAS ISSUES
 	
 	
 	public AnalogUltrasonic(int pin){
@@ -27,7 +27,7 @@ public class AnalogUltrasonic {
 		public void run(){
 			while(true){
 				try{
-					cq.add(sensor.getVoltage());
+					cq.add(EMF_TO_CM* sensor.getVoltage());
 					Thread.sleep(10); //update every .1 seconds
 				} catch(InterruptedException e){
 					System.out.println("Update Ultrasonic Sensor Thread died");

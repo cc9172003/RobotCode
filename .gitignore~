@@ -15,7 +15,7 @@ $RECYCLE.BIN/
 *.msp
 
 # Build files
-bin/org/usfirst/frc/team3952/robot/*.class
+bin/org/usfirst/frc/team3952/robot/
 
 # Windows shortcuts
 *.lnk

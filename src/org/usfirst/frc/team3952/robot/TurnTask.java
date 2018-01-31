@@ -11,21 +11,24 @@ public class TurnTask extends Task {
 	private double degrees;
 	
 	/**
-	 * 
-	 * @param robot
+	 * Constructs a Turn Task task to turn degrees degrees
+	 * @param robot the robot
 	 * @param degrees negative = left, + = right
 	 */
 	public TurnTask(Robot robot, double degrees){
 		drive = robot.getDrive();
 		gyro = robot.getGyro();
-		startingAngle = gyro.getAngle()%360;
+		startingAngle = gyro.getAngle() % 360;
 		this.degrees = degrees;
 	}
 	
 	public boolean run(){
 		
-		if(differenceAngle(gyro.getAngle(), startingAngle) < 0.5)
+		if(differenceAngle(gyro.getAngle(), startingAngle+degrees) < 0.5){
+			drive.driveCartesian(0, 0, 0);
 			return true; //should die after this
+			
+		}
 		
 		if(degrees < 0){
 			drive.driveCartesian(0, 0, -0.5);
@@ -45,6 +48,6 @@ public class TurnTask extends Task {
 	
 	
 	private double differenceAngle(double a1, double a2){
-		return Math.abs(a1%360 - a2%360);
+		return Math.abs(a1 % 360 - a2 % 360);
 	}
 }

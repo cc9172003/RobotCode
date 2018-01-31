@@ -40,6 +40,9 @@ public class Controller {
 	public double getLateralMovement() {
 		if(SMOOTH) return (lateralMovement = constraint(lerp(lateralMovement, -joystick.getY())));
 		else return (lateralMovement = -joystick.getY());
+		
+		//double m = Math.abs(joystick.getY());
+		//return (joystick.getY() > 0? 1: -1) * (0.35/Math.pow(0.5,3)*Math.pow(+m-0.5)+ 0.3*m+0.35)
 	}
 	
 	// positive = clockwise

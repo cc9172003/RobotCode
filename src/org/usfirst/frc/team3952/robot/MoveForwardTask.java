@@ -12,13 +12,14 @@ public class MoveForwardTask extends Task {
 		drive = robot.getDrive();
 		leftEncoder = robot.getLeftEncoder();
 		rightEncoder = robot.getRightEncoder();
-		totalDistance = distance;
+		totalDistance = distance + (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2;
 	}
 	
 	@Override
 	public boolean run() {
 		double currentDistance = (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2;
 		if(currentDistance >= totalDistance - 0.1) {
+			drive.driveCartesian(0, 0, 0);
 			return true;
 		} else {
 			drive.driveCartesian(0.3, 0, 0);		// set to a reasonable value
@@ -28,12 +29,12 @@ public class MoveForwardTask extends Task {
 	
 	@Override
 	public void cancel() {
-		drive.driveCartesian(0, 0, 0);		// needed?
+		drive.driveCartesian(0, 0, 0);		// needed? needed
 	}
 	
 	@Override
 	public String toString() {
 		double currentDistance = (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2;
-		return "Move Forward: " + (int)totalDistance + " feet(" + (int) (currentDistance - totalDistance) + " feet left)";
+		return "Move Forward: " + (int)totalDistance + " feet(" + (int) (totalDistance - currentDistance) + " feet left)";
 	}
 }

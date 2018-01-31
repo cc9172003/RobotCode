@@ -26,8 +26,9 @@ public class Robot extends IterativeRobot {
 								 new Talon(0));			// rear right
 		currentTask = new TeleopTask(this);
 		backgroundTask = new NullTask();
-		rightEncoder = new Encoder(0, 1);
-		leftEncoder = new Encoder(2, 3);
+		rightEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k2X); //we can also try k4 for more accuracy.
+		//20 pulses per rotation
+		leftEncoder = new Encoder(2, 3, false, Encoder.EncodingType.k2X);
 		gyro = new ADXRS450_Gyro();
 		autonomousQueue = new LinkedList<>();
 		//gyro.calibrate();
@@ -36,8 +37,6 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void teleopInit() {
-		currentTask = new TeleopTask(this);
-		backgroundTask = null;
 	}
 	
 	@Override
@@ -69,12 +68,25 @@ public class Robot extends IterativeRobot {
 		
 		
 		SmartDashboard.putString("Current Task", currentTask.toString());
+		//SmartDashboard.putString("Gyro: ", "" + gyro.getAngle());
+		//SmartDashboard.putString("Encoders right: ", "" + rightEncoder.getDistance());
+		//SmartDashboard.putString("Encoders left: ", "" + leftEncoder.getDistance());
 	}
 	
 	@Override
 	public void autonomousInit(){
 		String stuff = DriverStation.getInstance().getGameSpecificMessage(); //ex: LRL
+		String ourSwitchPos = stuff.substring(0, 1);
+		String scalePos = stuff.substring(1, 2);
+		String ourPosition = "L"; //"L", "R"
 		
+		
+		//setting up queue
+		autonomousQueue.add(new MoveForwardTask(this, 2));
+		//autonomousQueue.add(new TurnTask(this, 90));
+		//autonomousQueue.add(new TurnTask(this, -90));
+		//autonomousQueue.add(new TurnTask(this, 57));
+		//autonomousQueue.add(new TurnTask(this, 90));
 	}
 	
 	@Override

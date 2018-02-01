@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
  * rear right 1
  * front right 2
  * front left 3
+ * 
  */
 public class Robot extends IterativeRobot {
 	
@@ -27,10 +28,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		controller = new Controller();
-		Talon frontLeft = new Talon(3);
-		Talon rearLeft = new Talon(0);
-		Talon frontRight = new Talon(2);
-		Talon rearRight = new Talon(1);
+		Spark frontLeft = new Spark(3);
+		Spark rearLeft = new Spark(0);
+		Spark frontRight = new Spark(2);
+		Spark rearRight = new Spark(1);
 		//frontRight.setInverted(true);
 		//rearLeft.setInverted(true);
 		drive = new MecanumDrive(frontLeft, 

@@ -6,6 +6,13 @@ import edu.wpi.first.wpilibj.drive.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
+
+/**
+ * rear left 0
+ * rear right 1
+ * front right 2
+ * front left 3
+ */
 public class Robot extends IterativeRobot {
 	
 	private Controller controller;
@@ -20,17 +27,27 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		controller = new Controller();
-		drive = new MecanumDrive(new Talon(0),			// Set these to correct pins(front left)
-								 new Talon(0), 			// rear left
-								 new Talon(0), 			// front right
-								 new Talon(0));			// rear right
-		currentTask = new TeleopTask(this);
+		Talon frontLeft = new Talon(3);
+		Talon rearLeft = new Talon(0);
+		Talon frontRight = new Talon(2);
+		Talon rearRight = new Talon(1);
+		//frontRight.setInverted(true);
+		//rearLeft.setInverted(true);
+		drive = new MecanumDrive(frontLeft, 
+								 rearLeft, 
+								 frontRight, 
+								 rearRight);
+								 
 		backgroundTask = new NullTask();
 		rightEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k2X); //we can also try k4 for more accuracy.
+		rightEncoder.setDistancePerPulse(1/2.001);
 		//20 pulses per rotation
 		leftEncoder = new Encoder(2, 3, false, Encoder.EncodingType.k2X);
+		leftEncoder.setDistancePerPulse(1/2.001);
 		gyro = new ADXRS450_Gyro();
 		autonomousQueue = new LinkedList<>();
+		//currentTask = new TurnTask(this, 90);	//Test task
+		currentTask = new TeleopTask(this);
 		//gyro.calibrate();
 		
 	}
@@ -60,17 +77,18 @@ public class Robot extends IterativeRobot {
 		}
 		
 		
-		/**IMPORTANT NOTE: Null task.run never returns true.**/
+		//IMPORTANT NOTE: Null task.run never returns true.
 		boolean backDone = backgroundTask.run();
 		if(backDone){
 			backgroundTask = new NullTask();
 		}
 		
 		
+		
 		SmartDashboard.putString("Current Task", currentTask.toString());
-		//SmartDashboard.putString("Gyro: ", "" + gyro.getAngle());
-		//SmartDashboard.putString("Encoders right: ", "" + rightEncoder.getDistance());
-		//SmartDashboard.putString("Encoders left: ", "" + leftEncoder.getDistance());
+		SmartDashboard.putString("Gyro: ", "" + gyro.getAngle());
+		SmartDashboard.putString("Encoders right: ", "" + rightEncoder.getDistance());
+		SmartDashboard.putString("Encoders left: ", "" + leftEncoder.getDistance());
 	}
 	
 	@Override
@@ -82,11 +100,12 @@ public class Robot extends IterativeRobot {
 		
 		
 		//setting up queue
-		autonomousQueue.add(new MoveForwardTask(this, 2));
+		//autonomousQueue.add(new MoveForwardTask(this, 2));
 		//autonomousQueue.add(new TurnTask(this, 90));
 		//autonomousQueue.add(new TurnTask(this, -90));
-		//autonomousQueue.add(new TurnTask(this, 57));
+		//autonomousQueue.add(new TurnTask(this, 360));
 		//autonomousQueue.add(new TurnTask(this, 90));
+		autonomousQueue.add(new MoveForwardTask(this, 10000));
 	}
 	
 	@Override
@@ -95,6 +114,10 @@ public class Robot extends IterativeRobot {
 			if(autonomousQueue.peek().run()){
 				autonomousQueue.poll();
 			}
+			SmartDashboard.putString("Current Task", currentTask.toString());
+			SmartDashboard.putString("Gyro: ", "" + gyro.getAngle());
+			SmartDashboard.putString("Encoders right: ", "" + rightEncoder.getDistance());
+			SmartDashboard.putString("Encoders left: ", "" + leftEncoder.getDistance());
 		}
 		
 	}

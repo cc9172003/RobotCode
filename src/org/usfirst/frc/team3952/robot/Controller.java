@@ -32,35 +32,41 @@ public class Controller {
 	}
 	
 	public double getHorizontalMovement() {
-		if(SMOOTH) return (horizontalMovement = constraint(lerp(horizontalMovement, joystick.getX())));
-		//else return (horizontalMovement = joystick.getX());
-		else { 
-			
-			double m = Math.abs(joystick.getY());
-			return (joystick.getY() > 0? -0.5: 0.5) * (0.35/Math.pow(0.5,3)*Math.pow(+m-0.5, 3)+ 0.3*m+0.35);
-		}
+//		if(SMOOTH) return (horizontalMovement = constraint(lerp(horizontalMovement, joystick.getX())));
+//		else return (horizontalMovement = Math.abs(joystick.getX()) > 0.3? joystick.getX(): 0.0 );
+		
+		//maybe add +/- C
+		return Math.abs(joystick.getX()) >= 0.2 ? Math.signum(joystick.getX()) * Math.log(Math.abs(joystick.getX()) + 1 - 0.2): 0;
+//		else { 
+//			
+//			double m = Math.abs(joystick.getY());
+//			return (joystick.getY() > 0? -0.5: 0.5) * (0.35/Math.pow(0.5,3)*Math.pow(+m-0.5, 3)+ 0.3*m+0.35);
+//		}
 	}
 	
 	// joystick.getY() appears to be inverted, thus a negative sign is applied to the raw value
 	public double getLateralMovement() {
-		if(SMOOTH) return (lateralMovement = constraint(lerp(lateralMovement, -joystick.getY())));
-		else { //return (lateralMovement = -joystick.getY());
+//		if(SMOOTH) return (lateralMovement = constraint(lerp(lateralMovement, -joystick.getY())));
+//		else { return (lateralMovement = Math.abs(joystick.getY()) > 0.3? -joystick.getY(): 0.0);
 		
-			double m = Math.abs(joystick.getY());
-			return (joystick.getY() > 0? -0.5: 0.5) * (0.35/Math.pow(0.5,3)*Math.pow(+m-0.5, 3)+ 0.3*m+0.35);
-		}
+		return Math.abs(joystick.getY()) >= 0.2 ? Math.signum(-joystick.getY()) * Math.log(Math.abs(joystick.getY()) + 1 - 0.2) : 0;
+		
+//			double m = Math.abs(joystick.getY());
+//			return (joystick.getY() > 0? -0.5: 0.5) * (0.35/Math.pow(0.5,3)*Math.pow(+m-0.5, 3)+ 0.3*m+0.35);
+		//}
 	}
 	
 	// positive = clockwise
 	public double getRotation() {
 		//if(SMOOTH) return (rotation = constraint(lerp(rotation, 0.5 * joystick.getZ())));
 		//else return (rotation = 0.5 * joystick.getZ());
-		if(joystick.getRawButton(5)){
-			return 0.25;
-		} else if(joystick.getRawButton(4)){
-			return -0.25;
-		}
-		return 0.0;
+		return 0.5 * joystick.getZ();
+//		if(joystick.getRawButton(5)){
+//			return 0.25;
+//		} else if(joystick.getRawButton(4)){
+//			return -0.25;
+//		}
+//		return 0.0;
 		
 	}
 	

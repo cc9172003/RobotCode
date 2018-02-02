@@ -21,18 +21,20 @@ public class Robot extends IterativeRobot {
 	private Encoder rightEncoder, leftEncoder;
 	private ADXRS450_Gyro gyro;
 	
+	private Talon frontLeft, frontRight, rearLeft, rearRight;
+	
 	private Queue<Task> autonomousQueue;
 	
 	
 	@Override
 	public void robotInit() {
 		controller = new Controller();
-		Talon frontLeft = new Talon(3);
-		Talon rearLeft = new Talon(0);
-		Talon frontRight = new Talon(2);
-		Talon rearRight = new Talon(1);
-		//frontRight.setInverted(true);
-		//rearLeft.setInverted(true);
+		 frontLeft = new Talon(3);
+		 rearLeft = new Talon(0);
+		 frontRight = new Talon(2);
+		 rearRight = new Talon(1);
+		frontRight.setInverted(true);
+		rearRight.setInverted(true);
 		drive = new MecanumDrive(frontLeft, 
 								 rearLeft, 
 								 frontRight, 
@@ -88,7 +90,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Current Task", currentTask.toString());
 		SmartDashboard.putString("Gyro: ", "" + gyro.getAngle());
 		SmartDashboard.putString("Encoders right: ", "" + rightEncoder.getDistance());
-		SmartDashboard.putString("Encoders left: ", "" + leftEncoder.getDistance());
+		SmartDashboard.putString("Front Left", "" + frontLeft.get());
+		SmartDashboard.putString("Front Right", "" + frontRight.get());
+		SmartDashboard.putString("Rear Left", "" + rearLeft.get());
+		SmartDashboard.putString("Rear Right", "" + rearRight.get());
 	}
 	
 	@Override

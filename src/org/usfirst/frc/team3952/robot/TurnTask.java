@@ -3,6 +3,9 @@ package org.usfirst.frc.team3952.robot;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
+/**
+ * Status: Tested and working good enough but is a bit impercise.
+ */
 public class TurnTask extends Task {
 	
 	private ADXRS450_Gyro gyro;

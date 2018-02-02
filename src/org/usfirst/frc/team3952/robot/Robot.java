@@ -3,6 +3,7 @@ package org.usfirst.frc.team3952.robot;
 import edu.wpi.first.wpilibj.*;
 import java.util.*;
 import edu.wpi.first.wpilibj.drive.*;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
@@ -26,36 +27,56 @@ public class Robot extends IterativeRobot {
 	private Talon frontLeft, frontRight, rearLeft, rearRight;
 	
 	private Queue<Task> autonomousQueue;
-	
+	private SendableChooser<String> autonomousChooser;
 	
 	@Override
 	public void robotInit() {
 		controller = new Controller();
-		 frontLeft = new Talon(3);
-		 rearLeft = new Talon(0);
-		 frontRight = new Talon(2);
-		 rearRight = new Talon(1);
+		
+		// init Talons
+		frontLeft = new Talon(3);
+		rearLeft = new Talon(0);
+		frontRight = new Talon(2);
+		rearRight = new Talon(1);
 		frontRight.setInverted(true);
 		rearRight.setInverted(true);
+		
+		
+		//init drive train
 		drive = new MecanumDrive(frontLeft, 
 								 rearLeft, 
 								 frontRight, 
 								 rearRight);
 								 
 		backgroundTask = new NullTask();
-		rightEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k2X); //we can also try k4 for more accuracy.
-		rightEncoder.setDistancePerPulse(3/500.0);
+		rightEncoder = new Encoder(2, 3, false, Encoder.EncodingType.k4X); //we can also try k4 for more accuracy.
+		//rightEncoder.setDistancePerPulse(1.23 * 3/500.0);
+		rightEncoder.setDistancePerPulse(1.26 * 0.011747);
 		//20 pulses per rotation
-		leftEncoder = new Encoder(2, 3, false, Encoder.EncodingType.k2X);
-		leftEncoder.setDistancePerPulse(3/500.0);
+		leftEncoder = new Encoder(1, 0, false, Encoder.EncodingType.k2X);
+		leftEncoder.setDistancePerPulse(1.26 * 0.011747);//1.23 * 3/500.0);
+		
+		
 		gyro = new ADXRS450_Gyro();
 		autonomousQueue = new LinkedList<>();
-		//currentTask = new TurnTask(this, 90);	//Test task
 		currentTask = new TeleopTask(this);
-		//gyro.calibrate();
+		//gyro.calibrate(); is this necessary? no
 		
+		autonomousChooser = new SendableChooser<>();
+		autonomousChooser.addObject("Starting Left", "L");
+		autonomousChooser.addObject("Starting Middle", "R");
+		autonomousChooser.addDefault("Starting Right", "R");
+		SmartDashboard.putData("Autonomous Initial Position", autonomousChooser);
 	}
 	
+	
+	//=====================================DISABLED=================================//
+	
+	@Override
+	public void disabledInit() {}
+
+	//=================================TELOP=====================================///
+
 	@Override
 	public void teleopInit() {
 	}
@@ -92,28 +113,41 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putString("Current Task", currentTask.toString());
 		SmartDashboard.putString("Gyro: ", "" + gyro.getAngle());
-		SmartDashboard.putString("Encoders right: ", "" + rightEncoder.getDistance());
+		SmartDashboard.putString("Right Encoder teleop: ", "" + rightEncoder.getDistance());
+		SmartDashboard.putString("Left Encoder teleop", ""+ leftEncoder.getDistance());
+		
 		SmartDashboard.putString("Front Left", "" + frontLeft.get());
 		SmartDashboard.putString("Front Right", "" + frontRight.get());
 		SmartDashboard.putString("Rear Left", "" + rearLeft.get());
 		SmartDashboard.putString("Rear Right", "" + rearRight.get());
 	}
 	
+	
+	//=====================================AUTONOMOUS======================================//
+	
+	
 	@Override
 	public void autonomousInit(){
 		String stuff = DriverStation.getInstance().getGameSpecificMessage(); //ex: LRL
 		String ourSwitchPos = stuff.substring(0, 1);
 		String scalePos = stuff.substring(1, 2);
-		String ourPosition = "L"; //"L", "R"
+		String ourPosition = autonomousChooser.getSelected(); //L, R, M
 		
 		
+		//need to adapt chris's code
 		//setting up queue
 		//autonomousQueue.add(new MoveForwardTask(this, 2));
 		//autonomousQueue.add(new TurnTask(this, 90));
 		//autonomousQueue.add(new TurnTask(this, -90));
 		//autonomousQueue.add(new TurnTask(this, 360));
-		//autonomousQueue.add(new TurnTask(this, 90));
-		autonomousQueue.add(new MoveForwardTask(this, 10000));
+		//autonomousQueue.add(
+		//      new MultiTask(new TurnTask(this, 90), new LadderUpTask(this, 4)
+		//);
+		// first 5.58
+		//second 4.5
+		// third 5.8
+		// fourth 5.7
+		autonomousQueue.add(new MoveForwardTask(this, 3));
 	}
 	
 	@Override
@@ -124,13 +158,17 @@ public class Robot extends IterativeRobot {
 			}
 			SmartDashboard.putString("Current Task", currentTask.toString());
 			SmartDashboard.putString("Gyro: ", "" + gyro.getAngle());
-			SmartDashboard.putString("Encoders right: ", "" + rightEncoder.getDistance());
-			SmartDashboard.putString("Encoders left: ", "" + leftEncoder.getDistance());
+			SmartDashboard.putString("Encoders right autonomous", "" + rightEncoder.getDistance());
+			SmartDashboard.putString("Encoders left autonomous", "" + leftEncoder.getDistance());
 		}
 		
 	}
 	
-	
+	//==============================TEST=============================//
+	@Override
+	public void testPeriodic(){
+		teleopPeriodic();
+	}
 	
 	
 	//=============================GETTERS=============================//

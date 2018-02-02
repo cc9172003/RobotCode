@@ -21,24 +21,15 @@ public class TeleopTask extends Task {
 	
 	@Override
 	public boolean run() {
+		double hor = controller.getHorizontalMovement(), lat = controller.getLateralMovement();
+		drive.driveCartesian(hor, 
+							 lat, 
+							 controller.getRotation()
+							 );
 		
-		drive.setFromController(controller.getHorizontalMovement(), controller.getLateralMovement(), controller.getRotation());
-//		//mecanumwheels.setFromController(controller.getLateralMovement(), etc) if ^ fails
-
-//		robot.frontLeft.set(-0.2);
-//		robot.rearLeft.set(-0.2);
-//		robot.frontRight.set(-0.2);
-//		robot.rearRight.set(-0.2);
-//		
-		//drive.driveCartesian(0,  0.2,  0);
-		
-		SmartDashboard.putString("Front Left Talon", "" + robot.frontLeft.get());
-		SmartDashboard.putString("Rear Left Talon", "" + robot.rearLeft.get());
-		SmartDashboard.putString("Front Right Talon", "" + robot.frontRight.get());
-		SmartDashboard.putString("Rear Right Talon", "" + robot.rearRight.get());
-		SmartDashboard.putString("getHorizontalMov", "" + controller.getHorizontalMovement());
-		SmartDashboard.putString("Laterla", "" + controller.getLateralMovement());
-		
+		SmartDashboard.putString("Horizontal Movement", "" + hor);
+		SmartDashboard.putString("Lateral Movement", "" + lat);
+		//mecanumwheels.setFromController(controller.getLateralMovement(), etc) if ^ fails
 		return false;
 	}
 	

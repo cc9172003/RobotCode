@@ -14,8 +14,8 @@ public class Controller {
 	public static final int COLLAPSE_ARM = 2;
 	public static final int EXTEND_LADDER = 3;
 	public static final int RETRACT_LADDER = 4;
-	public static final int CANCEL_TASK = -1;					// set to a reasonable value
-	public static final int CANCEL_BACKGROUND_TASK = -1;		// set to a reasonable value
+	public static final int CANCEL_TASK = 1;					// set to a reasonable value
+	public static final int CANCEL_BACKGROUND_TASK = 1;		// set to a reasonable value
 	
 	private Joystick joystick;
 	
@@ -36,8 +36,10 @@ public class Controller {
 		//else return (horizontalMovement = joystick.getX());
 		else { 
 			
-			double m = Math.abs(joystick.getY());
-			return (joystick.getY() > 0? -0.5: 0.5) * (0.35/Math.pow(0.5,3)*Math.pow(+m-0.5, 3)+ 0.3*m+0.35);
+//			double m = Math.abs(joystick.getX());
+//			return (joystick.getX() > 0? 0.5: -0.5) * (0.35/Math.pow(0.5,3)*Math.pow(+m-0.5, 3)+ 0.3*m+0.35);
+		
+			return joystick.getX();
 		}
 	}
 	
@@ -46,8 +48,10 @@ public class Controller {
 		if(SMOOTH) return (lateralMovement = constraint(lerp(lateralMovement, -joystick.getY())));
 		else { //return (lateralMovement = -joystick.getY());
 		
-			double m = Math.abs(joystick.getY());
-			return (joystick.getY() > 0? -0.5: 0.5) * (0.35/Math.pow(0.5,3)*Math.pow(+m-0.5, 3)+ 0.3*m+0.35);
+//			double m = Math.abs(joystick.getY());
+//			return (joystick.getY() > 0? -0.5: 0.5) * (0.35/Math.pow(0.5,3)*Math.pow(+m-0.5, 3)+ 0.3*m+0.35);
+		
+			return -joystick.getY();
 		}
 	}
 	

@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 public class Robot extends IterativeRobot {
 	
 	private Controller controller;
-	private MecanumDrive drive;
+	public Talon frontLeft, rearLeft, frontRight, rearRight;
+	private MechanumWheels drive;
 	private Task currentTask, backgroundTask;
 	private Encoder rightEncoder, leftEncoder;
 	private ADXRS450_Gyro gyro;
@@ -28,23 +29,19 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		controller = new Controller();
-		Spark frontLeft = new Spark(3);
-		Spark rearLeft = new Spark(0);
-		Spark frontRight = new Spark(2);
-		Spark rearRight = new Spark(1);
-		//frontRight.setInverted(true);
-		//rearLeft.setInverted(true);
-		drive = new MecanumDrive(frontLeft, 
-								 rearLeft, 
-								 frontRight, 
-								 rearRight);
-								 
+		frontLeft = new Talon(3);
+		rearLeft = new Talon(0);
+		frontRight = new Talon(2);
+		rearRight = new Talon(1);
+//		frontRight.setInverted(true);
+//		rearRight.setInverted(true);
+		drive = new MechanumWheels(frontLeft, frontRight, rearLeft, rearRight);			 
 		backgroundTask = new NullTask();
 		rightEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k2X); //we can also try k4 for more accuracy.
-		rightEncoder.setDistancePerPulse(1/2.001);
+		rightEncoder.setDistancePerPulse(3/500.0);
 		//20 pulses per rotation
 		leftEncoder = new Encoder(2, 3, false, Encoder.EncodingType.k2X);
-		leftEncoder.setDistancePerPulse(1/2.001);
+		leftEncoder.setDistancePerPulse(3/500.0);
 		gyro = new ADXRS450_Gyro();
 		autonomousQueue = new LinkedList<>();
 		//currentTask = new TurnTask(this, 90);	//Test task
@@ -73,6 +70,7 @@ public class Robot extends IterativeRobot {
 		
 		
 		boolean done = currentTask.run();
+		//try {Thread.sleep(2000);} catch(InterruptedException ignored) {}
 		if(done){
 			currentTask = new TeleopTask(this);
 		}
@@ -132,7 +130,7 @@ public class Robot extends IterativeRobot {
 		return controller;
 	}
 	
-	public MecanumDrive getDrive() {
+	public MechanumWheels getDrive() {
 		return drive;
 	}
 	

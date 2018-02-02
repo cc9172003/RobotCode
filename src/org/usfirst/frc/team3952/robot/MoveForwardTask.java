@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.*;
 
 public class MoveForwardTask extends Task {
-	private MecanumDrive drive;
+	private MechanumWheels drive;
 	private Encoder leftEncoder, rightEncoder;
 	private double totalDistance;
 	
@@ -19,17 +19,17 @@ public class MoveForwardTask extends Task {
 	public boolean run() {
 		double currentDistance = (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
 		if(currentDistance >= totalDistance - 0.1) {
-			drive.driveCartesian(0, 0, 0);
+			drive.setFromController(0, 0, 0);
 			return true;
 		} else {
-			drive.driveCartesian(0, 0.3, 0);		// set to a reasonable value
+			drive.setFromController(0, 0.3, 0);		// set to a reasonable value
 			return false;
 		}
 	}
 	
 	@Override
 	public void cancel() {
-		drive.driveCartesian(0, 0, 0);		// needed? needed
+		drive.setFromController(0, 0, 0);		// needed? needed
 	}
 	
 	@Override

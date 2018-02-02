@@ -6,9 +6,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class TeleopTask extends Task {
-	Robot robot;				// delete this
 	private Controller controller;
-	private MechanumWheels drive;
+	private MecanumDrive drive;
 	private ADXRS450_Gyro gyro;
 	
 	public TeleopTask(Robot robot) {
@@ -16,7 +15,6 @@ public class TeleopTask extends Task {
 		drive = robot.getDrive();
 		gyro = robot.getGyro();
 		
-		this.robot  = robot;
 	}
 	
 	@Override
@@ -35,7 +33,7 @@ public class TeleopTask extends Task {
 	
 	@Override
 	public void cancel() {
-		drive.setFromController(0, 0, 0);		// needed?
+		drive.driveCartesian(0, 0, 0);		// needed?
 	}
 	
 	@Override

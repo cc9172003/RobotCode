@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 public class Robot extends IterativeRobot {
 	
 	private Controller controller;
-	public Talon frontLeft, rearLeft, frontRight, rearRight;
-	private MechanumWheels drive;
+
+	private MecanumDrive drive;
 	private Task currentTask, backgroundTask;
 	private Encoder rightEncoder, leftEncoder;
 	private ADXRS450_Gyro gyro;
@@ -139,7 +139,7 @@ public class Robot extends IterativeRobot {
 		return controller;
 	}
 	
-	public MechanumWheels getDrive() {
+	public MecanumDrive getDrive() {
 		return drive;
 	}
 	
